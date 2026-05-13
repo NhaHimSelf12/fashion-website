@@ -36,3 +36,13 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('/settings', [App\Http\Controllers\AdminController::class, 'settings'])->name('settings');
     Route::post('/settings/update-khqr', [App\Http\Controllers\AdminController::class, 'updateKhqr'])->name('settings.updateKhqr');
 });
+
+// Deployment Route (Temporary)
+Route::get('/run-migrations', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        return 'Migrations executed successfully! <br><a href="/">Go back to Home</a>';
+    } catch (\Exception $e) {
+        return 'Error: ' . $e->getMessage();
+    }
+});
