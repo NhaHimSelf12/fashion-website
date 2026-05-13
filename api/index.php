@@ -10,6 +10,7 @@ $directories = [
     "$storagePath/framework/sessions",
     "$storagePath/framework/views",
     "$storagePath/logs",
+    "$storagePath/bootstrap/cache",
 ];
 
 foreach ($directories as $dir) {
