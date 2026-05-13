@@ -17,7 +17,9 @@
   ],
   "env": {
     "APP_CONFIG_CACHE": "/tmp/config.php",
-    "VIEW_COMPILED_PATH": "/tmp"
+    "VIEW_COMPILED_PATH": "/tmp",
+    "SESSION_DRIVER": "cookie",
+    "LOG_CHANNEL": "stderr"
   },
   "outputDirectory": "public"
 }
