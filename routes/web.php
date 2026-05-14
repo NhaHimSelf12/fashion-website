@@ -40,9 +40,13 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 // Deployment Route (Temporary)
 Route::get('/run-migrations', function () {
     try {
-        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        \Illuminate\Support\Facades\Artisan::call('migrate:fresh', ['--force' => true]);
         return 'Migrations executed successfully! <br><a href="/">Go back to Home</a>';
     } catch (\Exception $e) {
-        return 'Error: ' . $e->getMessage();
+        $msg = 'Error: ' . $e->getMessage();
+        if ($e->getPrevious()) {
+            $msg .= '<br>Previous Error: ' . $e->getPrevious()->getMessage();
+        }
+        return $msg;
     }
 });
