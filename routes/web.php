@@ -37,16 +37,4 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('/settings/update-khqr', [App\Http\Controllers\AdminController::class, 'updateKhqr'])->name('settings.updateKhqr');
 });
 
-// Deployment Route (Temporary)
-Route::get('/run-migrations', function () {
-    try {
-        \Illuminate\Support\Facades\Artisan::call('migrate:fresh', ['--force' => true]);
-        return 'Migrations executed successfully! <br><a href="/">Go back to Home</a>';
-    } catch (\Exception $e) {
-        $msg = 'Error: ' . $e->getMessage();
-        if ($e->getPrevious()) {
-            $msg .= '<br>Previous Error: ' . $e->getPrevious()->getMessage();
-        }
-        return $msg;
-    }
-});
+
