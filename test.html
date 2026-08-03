@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fusion T-shirt</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        primary: '#18181b', // Zinc 900 (Almost black)
+                        secondary: '#52525b', // Zinc 600
+                        accent: '#a1a1aa', // Zinc 400
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        // Check local storage or system preference for dark mode
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+            if (document.documentElement.classList.contains('dark')) {
+                localStorage.theme = 'dark';
+            } else {
+                localStorage.theme = 'light';
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fdfdfd;
+            min-height: 100vh;
+        }
+
+        .dark body {
+            background-color: #09090b;
+        }
+
+        .glass-nav {
+            background: rgba(253, 253, 253, 0.95);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .dark .glass-nav {
+            background: rgba(9, 9, 11, 0.95);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .glass-card {
+            background: #ffffff;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.4s ease;
+        }
+
+        .dark .glass-card {
+            background: #18181b;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: #f4f4f5;
+        }
+
+        .product-img-wrapper {
+            overflow: hidden;
+            background-color: #f4f4f5;
+        }
+
+        .dark .product-img-wrapper {
+            background-color: #27272a;
+        }
+
+        .product-img {
+            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .product-card {
+            transition: all 0.4s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 0.8s forwards;
+        }
+
+        .product-card:hover {
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.04);
+        }
+
+        .dark .product-card:hover {
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        }
+
+        .product-card:hover .product-img {
+            transform: scale(1.05);
+        }
+
+        /* Minimalist UI Elements */
+        .btn-primary {
+            background-color: #18181b;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #27272a;
+        }
+
+        .dark .btn-primary {
+            background-color: #f4f4f5;
+            color: #18181b;
+        }
+
+        .dark .btn-primary:hover {
+            background-color: #e4e4e7;
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Hero Ken Burns zoom */
+        .hero-bg img { animation: kenburns 18s ease-out infinite alternate; }
+        @keyframes kenburns { from { transform: scale(1); } to { transform: scale(1.12); } }
+
+        /* Hero staggered entrance */
+        .hero-item { opacity: 0; transform: translateY(30px); animation: heroFade 1s cubic-bezier(0.25,1,0.5,1) forwards; animation-delay: var(--d, 0s); }
+        @keyframes heroFade { to { opacity: 1; transform: translateY(0); } }
+
+        /* Infinite marquee */
+        .marquee-track { animation: marquee 30s linear infinite; }
+        .marquee-track:hover { animation-play-state: paused; }
+        @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+        /* Scroll reveal */
+        .reveal { opacity: 0; transform: translateY(40px); transition: opacity .9s cubic-bezier(0.25,1,0.5,1), transform .9s cubic-bezier(0.25,1,0.5,1); transition-delay: var(--d, 0s); }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        /* Newsletter dot pattern */
+        .newsletter-pattern { background-image: radial-gradient(circle, #ffffff 1px, transparent 1px); background-size: 24px 24px; }
+
+        @media (prefers-reduced-motion: reduce) {
+          .hero-bg img, .marquee-track, .hero-item { animation-duration: 0.01s; animation-iteration-count: 1; }
+          .reveal { transition: none; opacity: 1; transform: none; }
+        }
+    </style>
+    <!-- Add Playfair Display for elegant headings -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+        rel="stylesheet">
+</head>
+
+<body class="text-gray-800 dark:text-gray-200 antialiased flex flex-col min-h-screen transition-colors duration-500">
+
+    <!-- Navbar -->
+    <nav class="glass-nav fixed w-full z-50 top-0 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="http://localhost"
+                        class="text-2xl font-serif font-bold text-gray-900 dark:text-white tracking-wider uppercase">
+                        Fusion T-shirt
+                    </a>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-6 lg:space-x-10 items-center">
+                    <a href="http://localhost"
+                        class="relative group py-2 text-sm text-gray-900 dark:text-gray-200 font-medium tracking-wide uppercase transition-colors border-b-2 border-transparent hover:border-gray-300 dark:hover:border-gray-600">
+                        Home
+                    </a>
+
+                    <a href="http://localhost/shop"
+                        class="relative group py-2 text-sm text-gray-900 dark:text-gray-200 font-medium tracking-wide uppercase transition-colors border-b-2 border-transparent hover:border-gray-300 dark:hover:border-gray-600">
+                        Shop
+                    </a>
+
+                    <a href="http://localhost/category"
+                        class="relative group py-2 text-sm text-gray-900 dark:text-gray-200 font-medium tracking-wide uppercase transition-colors border-b-2 border-transparent hover:border-gray-300 dark:hover:border-gray-600">
+                        Collections
+                    </a>
+
+                    <a href="http://localhost/cart"
+                        class="relative group py-2 text-sm text-gray-900 dark:text-gray-200 transition flex items-center border-b-2 border-transparent hover:border-gray-300 dark:hover:border-gray-600">
+                        <span class="relative z-10 flex items-center">
+                            <i class="fa-solid fa-cart-shopping mr-2"></i>
+                            <span class="hidden lg:inline uppercase tracking-wide">Cart</span>
+                                                                                </span>
+                    </a>
+
+                    <!-- Dark Mode Toggle Button -->
+                    <button onclick="toggleDarkMode()"
+                        class="text-gray-700 dark:text-yellow-400 hover:text-primary dark:hover:text-yellow-300 transition-colors p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none">
+                        <i class="fa-solid fa-moon dark:hidden text-xl"></i>
+                        <i class="fa-solid fa-sun hidden dark:block text-xl"></i>
+                    </button>
+
+                                            <a href="http://localhost/login"
+                            class="text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white transition text-sm font-medium uppercase tracking-wide px-2">Login</a>
+                        <a href="http://localhost/register"
+                            class="btn-primary px-6 py-2 rounded-sm text-sm font-medium uppercase tracking-wide">Register</a>
+                                    </div>
+
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow pt-24 pb-28 md:pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+        
+        
+          <!-- Header -->
+  <div class="mb-10">
+    <p class="hero-item text-xs font-medium uppercase tracking-[0.35em] text-gray-400 mb-2" style="--d:.05s">Overview</p>
+    <div class="hero-item flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2" style="--d:.15s">
+      <h1 class="font-serif text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white">Admin Dashboard.</h1>
+      <p class="text-sm text-gray-400 dark:text-gray-500 uppercase tracking-[0.2em]">Monday — Aug 03, 2026</p>
+    </div>
+  </div>
+
+  <!-- Stat cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10" id="stats">
+      <div class="glass-card group p-6 hover:-translate-y-1 hover:shadow-xl transition-all duration-500" style="--d:0s">
+        <div class="flex items-start justify-between mb-8">
+          <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400 dark:text-gray-500 pt-2">Total Orders</p>
+          <span class="w-11 h-11 rounded-full border border-gray-200 dark:border-gray-700 flex items-center justify-center text-gray-400 group-hover:bg-gray-900 group-hover:border-gray-900 group-hover:text-white dark:group-hover:bg-white dark:group-hover:border-white dark:group-hover:text-gray-900 transition-all duration-500">
+            <i class="fa-solid fa-cart-shopping"></i>
+          </span>
+        </div>
+        <p class="font-serif text-4xl font-bold text-gray-900 dark:text-white"><span class="counter" data-target="0">0</span></p>
+      </div>
+      
+      <div class="glass-card group p-6 hover:-translate-y-1 hover:shadow-xl transition-all duration-500" style="--d:0.1s">
+        <div class="flex items-start justify-between mb-8">
+          <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400 dark:text-gray-500 pt-2">Total Revenue</p>
+          <span class="w-11 h-11 rounded-full border border-gray-200 dark:border-gray-700 flex items-center justify-center text-gray-400 group-hover:bg-gray-900 group-hover:border-gray-900 group-hover:text-white dark:group-hover:bg-white dark:group-hover:border-white dark:group-hover:text-gray-900 transition-all duration-500">
+            <i class="fa-solid fa-dollar-sign"></i>
+          </span>
+        </div>
+        <p class="font-serif text-4xl font-bold text-gray-900 dark:text-white">$<span class="counter" data-target="0">0</span></p>
+      </div>
+
+      <div class="glass-card group p-6 hover:-translate-y-1 hover:shadow-xl transition-all duration-500" style="--d:0.2s">
+        <div class="flex items-start justify-between mb-8">
+          <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400 dark:text-gray-500 pt-2">Products</p>
+          <span class="w-11 h-11 rounded-full border border-gray-200 dark:border-gray-700 flex items-center justify-center text-gray-400 group-hover:bg-gray-900 group-hover:border-gray-900 group-hover:text-white dark:group-hover:bg-white dark:group-hover:border-white dark:group-hover:text-gray-900 transition-all duration-500">
+            <i class="fa-solid fa-shirt"></i>
+          </span>
+        </div>
+        <p class="font-serif text-4xl font-bold text-gray-900 dark:text-white"><span class="counter" data-target="0">0</span></p>
+      </div>
+
+      <div class="glass-card group p-6 hover:-translate-y-1 hover:shadow-xl transition-all duration-500" style="--d:0.3s">
+        <div class="flex items-start justify-between mb-8">
+          <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400 dark:text-gray-500 pt-2">Categories</p>
+          <span class="w-11 h-11 rounded-full border border-gray-200 dark:border-gray-700 flex items-center justify-center text-gray-400 group-hover:bg-gray-900 group-hover:border-gray-900 group-hover:text-white dark:group-hover:bg-white dark:group-hover:border-white dark:group-hover:text-gray-900 transition-all duration-500">
+            <i class="fa-solid fa-tags"></i>
+          </span>
+        </div>
+        <p class="font-serif text-4xl font-bold text-gray-900 dark:text-white"><span class="counter" data-target="0">0</span></p>
+      </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Recent Orders -->
+    <div class="lg:col-span-2 glass-card p-8" style="--d:.1s">
+      <div class="flex justify-between items-center mb-6">
+        <div>
+          <p class="text-xs font-medium uppercase tracking-[0.3em] text-gray-400 mb-1">Latest Activity</p>
+          <h2 class="font-serif text-2xl font-bold text-gray-900 dark:text-white">Recent Orders</h2>
+        </div>
+        <a href="http://localhost/admin/reports" class="group text-xs font-semibold uppercase tracking-[0.2em] text-gray-900 dark:text-white flex items-center gap-2">
+          <span class="border-b border-gray-300 group-hover:border-gray-900 dark:group-hover:border-white pb-0.5 transition-colors">View All</span>
+          <i class="fa-solid fa-arrow-right-long transition-transform duration-300 group-hover:translate-x-1"></i>
+        </a>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b border-gray-200 dark:border-gray-800">
+              <th class="py-3 px-4 text-xs font-semibold uppercase tracking-[0.2em] text-gray-400 dark:text-gray-500">Order ID</th>
+              <th class="py-3 px-4 text-xs font-semibold uppercase tracking-[0.2em] text-gray-400 dark:text-gray-500">Customer</th>
+              <th class="py-3 px-4 text-xs font-semibold uppercase tracking-[0.2em] text-gray-400 dark:text-gray-500">Date</th>
+              <th class="py-3 px-4 text-xs font-semibold uppercase tracking-[0.2em] text-gray-400 dark:text-gray-500 text-right">Total</th>
+            </tr>
+          </thead>
+          <tbody id="orders">
+                            <tr>
+                    <td colspan="4" class="py-8 text-center text-gray-500 dark:text-gray-400 font-light text-sm uppercase tracking-widest">No orders found.</td>
+                </tr>
+                      </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="glass-card p-8" style="--d:.2s">
+      <p class="text-xs font-medium uppercase tracking-[0.3em] text-gray-400 mb-1">Shortcuts</p>
+      <h2 class="font-serif text-2xl font-bold text-gray-900 dark:text-white mb-6">Quick Actions</h2>
+      <div class="space-y-3" id="actions">
+          <a href="http://localhost/admin/products" class="group flex items-center p-4 border border-gray-200 dark:border-gray-800 hover:border-gray-900 dark:hover:border-white hover:shadow-lg transition-all duration-300">
+            <div class="w-11 h-11 shrink-0 border border-gray-200 dark:border-gray-700 flex items-center justify-center mr-4 text-gray-400 group-hover:bg-gray-900 group-hover:border-gray-900 group-hover:text-white dark:group-hover:bg-white dark:group-hover:border-white dark:group-hover:text-gray-900 transition-all duration-300">
+              <i class="fa-solid fa-shirt"></i>
+            </div>
+            <div class="flex-1">
+              <p class="font-semibold text-gray-900 dark:text-white text-sm uppercase tracking-wide">Manage Products</p>
+              <p class="text-xs text-gray-400 dark:text-gray-500 mt-0.5">Add, edit, or delete products</p>
+            </div>
+            <i class="fa-solid fa-arrow-right-long text-gray-300 dark:text-gray-600 group-hover:text-gray-900 dark:group-hover:text-white transition-all duration-300 group-hover:translate-x-1"></i>
+          </a>
+          
+          <a href="http://localhost/admin/categories" class="group flex items-center p-4 border border-gray-200 dark:border-gray-800 hover:border-gray-900 dark:hover:border-white hover:shadow-lg transition-all duration-300">
+            <div class="w-11 h-11 shrink-0 border border-gray-200 dark:border-gray-700 flex items-center justify-center mr-4 text-gray-400 group-hover:bg-gray-900 group-hover:border-gray-900 group-hover:text-white dark:group-hover:bg-white dark:group-hover:border-white dark:group-hover:text-gray-900 transition-all duration-300">
+              <i class="fa-solid fa-tags"></i>
+            </div>
+            <div class="flex-1">
+              <p class="font-semibold text-gray-900 dark:text-white text-sm uppercase tracking-wide">Manage Categories</p>
+              <p class="text-xs text-gray-400 dark:text-gray-500 mt-0.5">Organize your shop</p>
+            </div>
+            <i class="fa-solid fa-arrow-right-long text-gray-300 dark:text-gray-600 group-hover:text-gray-900 dark:group-hover:text-white transition-all duration-300 group-hover:translate-x-1"></i>
+          </a>
+
+          <a href="http://localhost/admin/reports" class="group flex items-center p-4 border border-gray-200 dark:border-gray-800 hover:border-gray-900 dark:hover:border-white hover:shadow-lg transition-all duration-300">
+            <div class="w-11 h-11 shrink-0 border border-gray-200 dark:border-gray-700 flex items-center justify-center mr-4 text-gray-400 group-hover:bg-gray-900 group-hover:border-gray-900 group-hover:text-white dark:group-hover:bg-white dark:group-hover:border-white dark:group-hover:text-gray-900 transition-all duration-300">
+              <i class="fa-solid fa-chart-line"></i>
+            </div>
+            <div class="flex-1">
+              <p class="font-semibold text-gray-900 dark:text-white text-sm uppercase tracking-wide">Sales Reports</p>
+              <p class="text-xs text-gray-400 dark:text-gray-500 mt-0.5">View and print daily/monthly reports</p>
+            </div>
+            <i class="fa-solid fa-arrow-right-long text-gray-300 dark:text-gray-600 group-hover:text-gray-900 dark:group-hover:text-white transition-all duration-300 group-hover:translate-x-1"></i>
+          </a>
+
+          <a href="http://localhost/admin/settings" class="group flex items-center p-4 border border-gray-200 dark:border-gray-800 hover:border-gray-900 dark:hover:border-white hover:shadow-lg transition-all duration-300">
+            <div class="w-11 h-11 shrink-0 border border-gray-200 dark:border-gray-700 flex items-center justify-center mr-4 text-gray-400 group-hover:bg-gray-900 group-hover:border-gray-900 group-hover:text-white dark:group-hover:bg-white dark:group-hover:border-white dark:group-hover:text-gray-900 transition-all duration-300">
+              <i class="fa-solid fa-cog"></i>
+            </div>
+            <div class="flex-1">
+              <p class="font-semibold text-gray-900 dark:text-white text-sm uppercase tracking-wide">Settings</p>
+              <p class="text-xs text-gray-400 dark:text-gray-500 mt-0.5">Manage KHQR Payment Image</p>
+            </div>
+            <i class="fa-solid fa-arrow-right-long text-gray-300 dark:text-gray-600 group-hover:text-gray-900 dark:group-hover:text-white transition-all duration-300 group-hover:translate-x-1"></i>
+          </a>
+      </div>
+    </div>
+  </div>
+
+<script>
+// Animated counters
+const counterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    const el = entry.target;
+    const target = +el.dataset.target;
+    const duration = 1600;
+    const startTime = performance.now();
+    function tick(now) {
+      const progress = Math.min((now - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      
+      let val = Math.round(target * eased);
+      el.textContent = val.toLocaleString();
+      
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+    counterObserver.unobserve(el);
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('.counter').forEach(el => counterObserver.observe(el));
+</script>
+    </main>
+
+    <!-- Footer -->
+    <footer
+        class="bg-white dark:bg-[#09090b] border-t border-gray-100 dark:border-gray-800 mt-auto transition-colors duration-500">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="col-span-1 md:col-span-1">
+                    <span
+                        class="text-xl font-serif font-bold text-gray-900 dark:text-white tracking-widest uppercase mb-4 block">
+                        ATELIER
+                    </span>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 mb-6 leading-relaxed">
+                        Curated fashion for the modern individual. Minimalist, premium, and responsibly sourced.
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-900 dark:text-white tracking-wider uppercase mb-4">Shop
+                    </h3>
+                    <ul class="space-y-3 text-sm text-gray-500 dark:text-gray-400">
+                        <li><a href="http://localhost/shop"
+                                class="hover:text-gray-900 dark:hover:text-white transition-colors">New Arrivals</a>
+                        </li>
+                        <li><a href="http://localhost/category"
+                                class="hover:text-gray-900 dark:hover:text-white transition-colors">Collections</a></li>
+                        <li><a href="#" class="hover:text-gray-900 dark:hover:text-white transition-colors">Best
+                                Sellers</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-900 dark:text-white tracking-wider uppercase mb-4">
+                        Support</h3>
+                    <ul class="space-y-3 text-sm text-gray-500 dark:text-gray-400">
+                        <li><a href="#" class="hover:text-gray-900 dark:hover:text-white transition-colors">FAQ</a></li>
+                        <li><a href="#" class="hover:text-gray-900 dark:hover:text-white transition-colors">Shipping &
+                                Returns</a></li>
+                        <li><a href="#" class="hover:text-gray-900 dark:hover:text-white transition-colors">Contact
+                                Us</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-900 dark:text-white tracking-wider uppercase mb-4">
+                        Connect</h3>
+                    <div class="flex space-x-6">
+                        <a href="#" class="text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"><i
+                                class="fa-brands fa-instagram text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"><i
+                                class="fa-brands fa-tiktok text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"><i
+                                class="fa-brands fa-pinterest text-xl"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-100 dark:border-gray-800 mt-12 pt-8 text-center text-xs text-gray-400">
+                &copy; 2026 ATELIER Fashion. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-[#09090b]/95 backdrop-blur-md border-t border-gray-100 dark:border-gray-800 z-[70] pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.05)] dark:shadow-[0_-4px_20px_rgba(255,255,255,0.02)]">
+        <div class="flex justify-around items-center h-16 px-2">
+            <a href="http://localhost" class="flex flex-col items-center justify-center w-full h-full text-gray-500 hover:text-primary dark:hover:text-white transition-colors ">
+                <i class="fa-solid fa-house text-[22px] mb-1  transition-transform"></i>
+                <span class="text-[9px] font-semibold uppercase tracking-widest mt-0.5">Home</span>
+            </a>
+            
+            <a href="http://localhost/shop" class="flex flex-col items-center justify-center w-full h-full text-gray-500 hover:text-primary dark:hover:text-white transition-colors ">
+                <i class="fa-solid fa-border-all text-[22px] mb-1  transition-transform"></i>
+                <span class="text-[9px] font-semibold uppercase tracking-widest mt-0.5">Products</span>
+            </a>
+            
+            <a href="http://localhost/cart" class="relative flex flex-col items-center justify-center w-full h-full text-gray-500 hover:text-primary dark:hover:text-white transition-colors ">
+                <div class="relative">
+                    <i class="fa-solid fa-cart-shopping text-[22px] mb-1  transition-transform"></i>
+                                                        </div>
+                <span class="text-[9px] font-semibold uppercase tracking-widest mt-0.5">Cart</span>
+            </a>
+            
+            <a href="http://localhost/category" class="flex flex-col items-center justify-center w-full h-full text-gray-500 hover:text-primary dark:hover:text-white transition-colors ">
+                <i class="fa-regular fa-heart text-[22px] mb-1  transition-transform"></i>
+                <span class="text-[9px] font-semibold uppercase tracking-widest mt-0.5">Wishlist</span>
+            </a>
+            
+            <a href="http://localhost/login" class="flex flex-col items-center justify-center w-full h-full text-gray-500 hover:text-primary dark:hover:text-white transition-colors ">
+                <i class="fa-regular fa-user text-[22px] mb-1  transition-transform"></i>
+                <span class="text-[9px] font-semibold uppercase tracking-widest mt-0.5">Profile</span>
+            </a>
+        </div>
+    </nav>
+
+    <script>
+
+        // Scroll reveal
+        const revealObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              revealObserver.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12 });
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+        // Animated counters
+        const counterObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            const el = entry.target;
+            const target = +el.dataset.target;
+            const duration = 1600;
+            const startTime = performance.now();
+            function tick(now) {
+              const progress = Math.min((now - startTime) / duration, 1);
+              const eased = 1 - Math.pow(1 - progress, 3);
+              el.textContent = Math.round(target * eased);
+              if (progress < 1) requestAnimationFrame(tick);
+            }
+            requestAnimationFrame(tick);
+            counterObserver.unobserve(el);
+          });
+        }, { threshold: 0.5 });
+        document.querySelectorAll('.counter').forEach(el => counterObserver.observe(el));
+    </script>
+</body>
+
+</html>

@@ -11,6 +11,9 @@ Route::get('/category', [ShopController::class, 'category'])->name('category');
 Route::get('/category/{id}', [ShopController::class, 'showCategory'])->name('category.show');
 
 // Authentication Routes
+Route::get('auth/google', [\App\Http\Controllers\Auth\GoogleController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('auth/google/callback', [\App\Http\Controllers\Auth\GoogleController::class, 'handleGoogleCallback']);
+
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login')->middleware('guest');
 Route::post('/login', [AuthController::class, 'login'])->middleware('guest');
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register')->middleware('guest');
