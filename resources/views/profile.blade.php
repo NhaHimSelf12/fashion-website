@@ -8,7 +8,7 @@
                 <div class="absolute -bottom-16 left-1/2 transform -translate-x-1/2">
                     <div class="w-32 h-32 rounded-full border-4 border-white bg-white overflow-hidden shadow-lg">
                         @if($user->avatar)
-                            <img src="{{ asset($user->avatar) }}" alt="Profile" class="w-full h-full object-cover">
+                            <img src="{{ str_starts_with($user->avatar, 'data:') || str_starts_with($user->avatar, 'http') ? $user->avatar : asset($user->avatar) }}" alt="Profile" class="w-full h-full object-cover">
                         @else
                             <img src="https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&background=random&size=128" alt="Profile" class="w-full h-full object-cover">
                         @endif

@@ -75,8 +75,10 @@ class ShopController extends Controller
         }
 
         if ($request->hasFile('avatar')) {
-            $path = $request->file('avatar')->store('avatars', 'public');
-            $user->avatar = '/storage/' . $path;
+            $image = $request->file('avatar');
+            $base64 = base64_encode(file_get_contents($image->path()));
+            $mime = $image->getClientMimeType();
+            $user->avatar = 'data:' . $mime . ';base64,' . $base64;
         }
 
         $user->save();

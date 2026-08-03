@@ -246,7 +246,7 @@
                             <button
                                 class="text-gray-700 hover:text-primary transition flex items-center focus:outline-none ring-2 ring-transparent group-hover:ring-primary rounded-full">
                                 @if(Auth::user()->avatar)
-                                    <img src="{{ asset(Auth::user()->avatar) }}"
+                                    <img src="{{ str_starts_with(Auth::user()->avatar, 'data:') || str_starts_with(Auth::user()->avatar, 'http') ? Auth::user()->avatar : asset(Auth::user()->avatar) }}"
                                         class="w-10 h-10 rounded-full object-cover border-2 border-transparent group-hover:border-primary transition-all"
                                         alt="Avatar">
                                 @else
