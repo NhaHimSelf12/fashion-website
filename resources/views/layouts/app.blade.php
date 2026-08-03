@@ -178,11 +178,21 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-20 items-center">
                 <!-- Logo -->
-                <div class="flex-shrink-0 flex items-center">
+                <div class="flex-shrink-0 flex items-center gap-3">
+                    <img src="{{ asset('images/logo.jpg') }}" alt="Logo" class="h-10 w-10 object-contain bg-white rounded-full p-0.5 shadow-sm">
                     <a href="{{ route('home') }}"
-                        class="text-2xl font-serif font-bold text-gray-900 dark:text-white tracking-wider uppercase">
+                        class="text-xl md:text-2xl font-serif font-bold text-gray-900 dark:text-white tracking-wider uppercase">
                         Fusion T-shirt
                     </a>
+                </div>
+
+                <!-- Mobile Header Right (Dark Mode) -->
+                <div class="md:hidden flex items-center">
+                    <button onclick="toggleDarkMode()"
+                        class="text-gray-700 dark:text-yellow-400 hover:text-primary dark:hover:text-yellow-300 transition-colors p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none">
+                        <i class="fa-solid fa-moon dark:hidden text-xl"></i>
+                        <i class="fa-solid fa-sun hidden dark:block text-xl"></i>
+                    </button>
                 </div>
 
                 <!-- Desktop Menu -->
