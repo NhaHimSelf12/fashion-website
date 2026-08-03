@@ -187,12 +187,25 @@
                 </div>
 
                 <!-- Mobile Header Right (Dark Mode) -->
-                <div class="md:hidden flex items-center">
+                <div class="md:hidden flex items-center gap-2">
                     <button onclick="toggleDarkMode()"
                         class="text-gray-700 dark:text-yellow-400 hover:text-primary dark:hover:text-yellow-300 transition-colors p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none">
                         <i class="fa-solid fa-moon dark:hidden text-xl"></i>
                         <i class="fa-solid fa-sun hidden dark:block text-xl"></i>
                     </button>
+                    @auth
+                    <a href="{{ route('profile') }}" class="block">
+                        @if(Auth::user()->avatar)
+                            <img src="{{ str_starts_with(Auth::user()->avatar, 'data:') || str_starts_with(Auth::user()->avatar, 'http') ? Auth::user()->avatar : asset(Auth::user()->avatar) }}"
+                                class="w-8 h-8 rounded-full object-cover border border-gray-200 dark:border-gray-700"
+                                alt="Avatar">
+                        @else
+                            <div class="w-8 h-8 rounded-full bg-gray-900 dark:bg-white flex items-center justify-center text-white dark:text-gray-900 font-bold text-sm">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+                        @endif
+                    </a>
+                    @endauth
                 </div>
 
                 <!-- Desktop Menu -->
