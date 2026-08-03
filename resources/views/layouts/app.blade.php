@@ -204,16 +204,13 @@
 
                     <a href="{{ route('cart') }}"
                         class="relative group py-2 text-sm text-gray-900 dark:text-gray-200 transition flex items-center {{ request()->routeIs('cart') ? 'border-b-2 border-primary dark:border-white' : 'border-b-2 border-transparent hover:border-gray-300 dark:hover:border-gray-600' }}">
-                        <span class="relative z-10 flex items-center">
+                        <span class="relative z-10 flex items-center" id="cart-icon-wrapper">
                             <i class="fa-solid fa-cart-shopping mr-2"></i>
                             <span class="hidden lg:inline uppercase tracking-wide">Cart</span>
                             @php $cartQty = array_sum(array_column(session('cart', []), 'quantity')); @endphp
-                            @if($cartQty > 0)
-                                <span
-                                    class="absolute -top-3 -right-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center">
-                                    {{ $cartQty }}
-                                </span>
-                            @endif
+                            <span id="cart-counter-badge" class="absolute -top-3 -right-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center transition-transform {{ $cartQty > 0 ? '' : 'hidden' }}">
+                                {{ $cartQty }}
+                            </span>
                         </span>
                     </a>
 
@@ -366,9 +363,9 @@
                 <div class="relative">
                     <i class="fa-solid fa-cart-shopping text-[22px] mb-1 {{ request()->routeIs('cart') ? 'scale-110' : '' }} transition-transform"></i>
                     @php $cartQty = array_sum(array_column(session('cart', []), 'quantity')); @endphp
-                    @if($cartQty > 0)
-                        <span class="absolute -top-1.5 -right-2.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center">{{ $cartQty }}</span>
-                    @endif
+                    <span id="mobile-cart-counter-badge" class="absolute -top-1.5 -right-2.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center transition-transform {{ $cartQty > 0 ? '' : 'hidden' }}">
+                        {{ $cartQty }}
+                    </span>
                 </div>
                 <span class="text-[9px] font-semibold uppercase tracking-widest mt-0.5">Cart</span>
             </a>
@@ -384,6 +381,9 @@
             </a>
         </div>
     </nav>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
     <script>
 
@@ -417,6 +417,82 @@
           });
         }, { threshold: 0.5 });
         document.querySelectorAll('.counter').forEach(el => counterObserver.observe(el));
+
+        // Global AJAX Add to Cart
+        document.querySelectorAll('form[action="{{ route('cart.add') }}"]').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const btn = this.querySelector('button[type="submit"]');
+                const originalHtml = btn.innerHTML;
+                
+                // Set loading state if the button doesn't have an icon we want to keep
+                if(!originalHtml.includes('fa-cart-shopping')) {
+                     btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+                } else {
+                     btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+                }
+                btn.disabled = true;
+
+                const formData = new FormData(this);
+                fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    btn.innerHTML = originalHtml;
+                    btn.disabled = false;
+
+                    if(data.success) {
+                        const badge = document.getElementById('cart-counter-badge');
+                        if (badge) {
+                            badge.innerText = data.cart_count;
+                            badge.classList.remove('hidden');
+                            badge.classList.add('scale-125');
+                            setTimeout(() => badge.classList.remove('scale-125'), 200);
+                        }
+                        const mobileBadge = document.getElementById('mobile-cart-counter-badge');
+                        if (mobileBadge) {
+                            mobileBadge.innerText = data.cart_count;
+                            mobileBadge.classList.remove('hidden');
+                            mobileBadge.classList.add('scale-125');
+                            setTimeout(() => mobileBadge.classList.remove('scale-125'), 200);
+                        }
+                        showToast(data.message, 'success');
+                    }
+                })
+                .catch(error => {
+                    btn.innerHTML = originalHtml;
+                    btn.disabled = false;
+                    showToast('Error adding to cart', 'error');
+                });
+            });
+        });
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            const bgColor = type === 'success' ? 'bg-gray-900 dark:bg-white' : 'bg-red-600';
+            const textColor = type === 'success' ? 'text-white dark:text-gray-900' : 'text-white';
+            const icon = type === 'success' ? 'fa-check-circle' : 'fa-circle-exclamation';
+            
+            toast.className = `flex items-center gap-3 px-4 py-3 rounded-lg shadow-xl ${bgColor} ${textColor} transform transition-all duration-300 translate-y-10 opacity-0`;
+            toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span class="font-medium text-sm">${message}</span>`;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => toast.classList.remove('translate-y-10', 'opacity-0'), 10);
+            setTimeout(() => {
+                toast.classList.add('translate-y-10', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
     </script>
 </body>
 

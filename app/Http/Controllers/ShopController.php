@@ -116,6 +116,16 @@ class ShopController extends Controller
         }
 
         session()->put('cart', $cart);
+
+        if ($request->ajax() || $request->wantsJson()) {
+            $cartQty = array_sum(array_column($cart, 'quantity'));
+            return response()->json([
+                'success' => true,
+                'message' => 'Product added to cart successfully!',
+                'cart_count' => $cartQty
+            ]);
+        }
+
         return redirect()->route('shop')->with('success', 'Product added to cart successfully!');
     }
 
@@ -182,9 +192,12 @@ class ShopController extends Controller
                 // If there's a payment receipt, send as Photo with caption
                 $receiptPath = $request->file('receipt')->path();
                 
-                // Save receipt locally as well (optional, but good for records)
-                $savedPath = $request->file('receipt')->store('receipts', 'public');
-                $order->update(['payment_receipt' => $savedPath]); // Assuming you might add this column later
+                try {
+                    $savedPath = $request->file('receipt')->store('receipts', 'public');
+                    $order->update(['payment_receipt' => $savedPath]);
+                } catch (\Exception $e) {
+                    // Ignore local storage error on Vercel
+                }
                 
                 Http::attach(
                     'photo', file_get_contents($receiptPath), 'receipt.jpg'
