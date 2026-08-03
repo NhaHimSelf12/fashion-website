@@ -20,6 +20,13 @@
                 <h1 class="text-2xl font-bold text-gray-800 dark:text-white">{{ $user->name }}</h1>
                 <p class="text-gray-500 dark:text-gray-400 mt-1">{{ $user->email }}</p>
                 <span class="inline-block mt-2 px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-bold rounded-full uppercase">{{ $user->role }}</span>
+                
+                <form action="{{ route('logout') }}" method="POST" class="mt-6">
+                    @csrf
+                    <button type="submit" class="w-full bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 font-bold py-2.5 px-4 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors border border-red-100 dark:border-red-800/50">
+                        <i class="fa-solid fa-right-from-bracket mr-2"></i> Logout
+                    </button>
+                </form>
             </div>
         </div>
     </div>
