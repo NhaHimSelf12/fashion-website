@@ -25,7 +25,7 @@
                 @forelse($products as $product)
                 <tr class="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:bg-gray-800/50">
                     <td class="py-3 px-4">
-                        <img src="{{ $product->image ? asset($product->image) : 'https://via.placeholder.com/50' }}" class="w-12 h-12 object-cover rounded shadow-sm">
+                        <img src="{{ $product->image ? (str_starts_with($product->image, 'data:') ? $product->image : asset($product->image)) : 'https://via.placeholder.com/50' }}" class="w-12 h-12 object-cover rounded shadow-sm">
                     </td>
                     <td class="py-3 px-4 font-medium">{{ $product->name }}</td>
                     <td class="py-3 px-4">{{ $product->category ? $product->category->name : 'N/A' }}</td>

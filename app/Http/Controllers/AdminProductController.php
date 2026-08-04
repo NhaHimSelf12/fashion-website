@@ -38,8 +38,8 @@ class AdminProductController extends Controller
         $data = $request->except('image_file');
 
         if ($request->hasFile('image_file')) {
-            $path = $request->file('image_file')->store('products', 'public');
-            $data['image'] = '/storage/' . $path;
+            $image = $request->file('image_file');
+            $data['image'] = 'data:image/' . $image->extension() . ';base64,' . base64_encode(file_get_contents($image->path()));
         }
 
         Product::create($data);
@@ -67,8 +67,8 @@ class AdminProductController extends Controller
         $data = $request->except('image_file');
 
         if ($request->hasFile('image_file')) {
-            $path = $request->file('image_file')->store('products', 'public');
-            $data['image'] = '/storage/' . $path;
+            $image = $request->file('image_file');
+            $data['image'] = 'data:image/' . $image->extension() . ';base64,' . base64_encode(file_get_contents($image->path()));
         }
 
         $product->update($data);

@@ -29,7 +29,7 @@
       @forelse($categories as $category)
         <a href="{{ route('category.show', $category->id) }}" class="relative group cursor-pointer block overflow-hidden reveal {{ $loop->index === 0 ? 'md:col-span-2' : '' }} h-[420px] lg:h-[550px]" style="--d: {{ ($loop->index % 3) * 0.15 }}s">
           @if($category->image)
-            <img src="{{ asset($category->image) }}" alt="{{ $category->name }}" class="w-full h-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-110">
+            <img src="{{ str_starts_with($category->image, 'data:') ? $category->image : asset($category->image) }}" alt="{{ $category->name }}" class="w-full h-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-110">
           @else
             <div class="w-full h-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center transition-transform duration-[1.2s] ease-out group-hover:scale-110">
               <i class="fa-solid fa-image text-6xl text-gray-400"></i>

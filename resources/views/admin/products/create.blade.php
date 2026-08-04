@@ -43,7 +43,7 @@
             <label class="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2">Product Image</label>
             @if(isset($product) && $product->image)
                 <div class="mb-2">
-                    <img src="{{ asset($product->image) }}" class="w-24 h-24 object-cover rounded shadow-sm">
+                    <img src="{{ str_starts_with($product->image, 'data:') ? $product->image : asset($product->image) }}" class="w-24 h-24 object-cover rounded shadow-sm">
                 </div>
             @endif
             <input type="file" name="image_file" accept="image/*" class="w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-indigo-700 transition">

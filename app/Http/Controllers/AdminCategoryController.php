@@ -36,9 +36,8 @@ class AdminCategoryController extends Controller
         
         $data = $request->all();
         if ($request->hasFile('image')) {
-            $imageName = time() . '.' . $request->image->extension();
-            $request->image->move(public_path('images/categories'), $imageName);
-            $data['image'] = 'images/categories/' . $imageName;
+            $image = $request->file('image');
+            $data['image'] = 'data:image/' . $image->extension() . ';base64,' . base64_encode(file_get_contents($image->path()));
         }
 
         Category::create($data);
@@ -62,13 +61,12 @@ class AdminCategoryController extends Controller
 
         $data = $request->all();
         if ($request->hasFile('image')) {
-            $imageName = time() . '.' . $request->image->extension();
-            $request->image->move(public_path('images/categories'), $imageName);
-            $data['image'] = 'images/categories/' . $imageName;
+            $image = $request->file('image');
+            $data['image'] = 'data:image/' . $image->extension() . ';base64,' . base64_encode(file_get_contents($image->path()));
             
-            // Delete old image if exists
-            if ($category->image && file_exists(public_path($category->image))) {
-                unlink(public_path($category->image));
+            // Delete old image if exists and is not base64
+            if ($category->image && !str_starts_with($category->image, 'data:') && file_exists(public_path($category->image))) {
+                @unlink(public_path($category->image));
             }
         }
 
