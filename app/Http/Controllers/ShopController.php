@@ -159,7 +159,7 @@ class ShopController extends Controller
                 
                 $prompt = "You are a strict financial auditor. Extract the total transfer amount and the transaction date from this receipt image. The expected amount is exactly \${$total}. Today's date is " . date('Y-m-d') . ". Return ONLY a raw JSON object (no markdown) with this format: {\"status\": \"SUCCESS\" or \"FAIL\", \"reason\": \"Explanation\"}. Status MUST be FAIL if the amount transferred is less than {$total}, or if the date is completely wrong. If the receipt is illegible or not a receipt, return FAIL.";
                 
-                $response = \Illuminate\Support\Facades\Http::timeout(20)->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . env('GEMINI_API_KEY'), [
+                $response = \Illuminate\Support\Facades\Http::timeout(20)->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=" . env('GEMINI_API_KEY'), [
                     'contents' => [
                         [
                             'parts' => [
