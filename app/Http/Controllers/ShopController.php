@@ -151,6 +151,45 @@ class ShopController extends Controller
             return $carry + ($item['price'] * $item['quantity']);
         }, 0);
 
+        // AI Receipt Verification
+        if (env('GEMINI_API_KEY') && $request->hasFile('receipt')) {
+            try {
+                $image = $request->file('receipt');
+                $base64 = base64_encode(file_get_contents($image->path()));
+                
+                $prompt = "Extract the transfer amount and the transaction date from this receipt. The expected amount is {$total}. Today's date is " . date('Y-m-d') . ". Return ONLY a JSON object with this exact format: {\"status\": \"SUCCESS|FAIL\", \"reason\": \"Your reason here\"}. Status is SUCCESS only if the amount matches exactly and the date is today or yesterday. If no date is found, you can assume it is today. DO NOT return markdown, just the raw JSON.";
+                
+                $response = \Illuminate\Support\Facades\Http::timeout(15)->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . env('GEMINI_API_KEY'), [
+                    'contents' => [
+                        [
+                            'parts' => [
+                                ['text' => $prompt],
+                                [
+                                    'inline_data' => [
+                                        'mime_type' => $image->getClientMimeType(),
+                                        'data' => $base64
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]);
+                
+                $text = $response->json('candidates.0.content.parts.0.text');
+                if ($text) {
+                    preg_match('/\{.*\}/s', $text, $matches);
+                    if (isset($matches[0])) {
+                        $result = json_decode($matches[0], true);
+                        if (isset($result['status']) && $result['status'] === 'FAIL') {
+                            return back()->with('error', 'Receipt Verification Failed: ' . ($result['reason'] ?? 'Invalid amount or date.'));
+                        }
+                    }
+                }
+            } catch (\Exception $e) {
+                // If API fails, we skip verification or log it
+            }
+        }
+
         $orderId = 'ORD-' . strtoupper(uniqid());
 
         // Save to Database
@@ -245,5 +284,133 @@ class ShopController extends Controller
         }
 
         return view('success', ['order' => $order]);
+    }
+
+    public function checkoutStripe(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'phone' => 'required|string|max:20',
+            'size' => 'required|string|in:S,M,L,XL',
+            'address' => 'required|string',
+        ]);
+
+        $cart = session()->get('cart', []);
+        
+        if (empty($cart)) {
+            return redirect()->route('shop')->with('error', 'Your cart is empty.');
+        }
+
+        if (!env('STRIPE_SECRET')) {
+            return back()->with('error', 'Stripe is not configured yet.');
+        }
+
+        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+
+        $lineItems = [];
+        $total = 0;
+        foreach ($cart as $item) {
+            $total += ($item['price'] * $item['quantity']);
+            $lineItems[] = [
+                'price_data' => [
+                    'currency' => 'usd',
+                    'product_data' => [
+                        'name' => $item['name'],
+                    ],
+                    'unit_amount' => intval($item['price'] * 100),
+                ],
+                'quantity' => $item['quantity'],
+            ];
+        }
+
+        session()->put('stripe_checkout_data', $request->all());
+
+        try {
+            $session = \Stripe\Checkout\Session::create([
+                'payment_method_types' => ['card'],
+                'line_items' => $lineItems,
+                'mode' => 'payment',
+                'success_url' => route('checkout.stripe.success'),
+                'cancel_url' => route('checkout.stripe.cancel'),
+            ]);
+
+            return redirect($session->url);
+        } catch (\Exception $e) {
+            return back()->with('error', 'Stripe error: ' . $e->getMessage());
+        }
+    }
+
+    public function stripeSuccess(Request $request)
+    {
+        $cart = session()->get('cart', []);
+        $checkoutData = session()->get('stripe_checkout_data');
+
+        if (empty($cart) || empty($checkoutData)) {
+            return redirect()->route('shop')->with('error', 'Invalid checkout session.');
+        }
+
+        $total = array_reduce($cart, function ($carry, $item) {
+            return $carry + ($item['price'] * $item['quantity']);
+        }, 0);
+
+        $orderId = 'ORD-' . strtoupper(uniqid());
+
+        $order = Order::create([
+            'user_id' => Auth::id(),
+            'order_number' => $orderId,
+            'name' => $checkoutData['name'],
+            'phone' => $checkoutData['phone'],
+            'size' => $checkoutData['size'],
+            'address' => $checkoutData['address'],
+            'total' => $total,
+            'status' => 'paid via card'
+        ]);
+
+        $itemsText = "";
+        foreach ($cart as $id => $item) {
+            OrderItem::create([
+                'order_id' => $order->id,
+                'product_id' => $id,
+                'quantity' => $item['quantity'],
+                'price' => $item['price']
+            ]);
+            $itemsText .= "- {$item['name']} (x{$item['quantity']}) - $" . number_format($item['price'] * $item['quantity'], 2) . "\n";
+        }
+
+        $message = "💳 *New Credit Card Order!*\n\n";
+        $message .= "🛒 *Order ID:* {$orderId}\n";
+        $message .= "👤 *Customer Name:* {$checkoutData['name']}\n";
+        $message .= "💰 *Total Amount:* $" . number_format($total, 2);
+
+        $token = env('TELEGRAM_BOT_TOKEN');
+        $chatId = env('TELEGRAM_CHAT_ID');
+        if ($token && $chatId) {
+            try {
+                \Illuminate\Support\Facades\Http::post("https://api.telegram.org/bot{$token}/sendMessage", [
+                    'chat_id' => $chatId,
+                    'text' => $message,
+                    'parse_mode' => 'Markdown'
+                ]);
+            } catch (\Exception $e) {}
+        }
+
+        session()->forget('cart');
+        session()->forget('stripe_checkout_data');
+
+        session()->put('last_order', [
+            'order_id' => $orderId,
+            'name' => $checkoutData['name'],
+            'phone' => $checkoutData['phone'],
+            'size' => $checkoutData['size'],
+            'address' => $checkoutData['address'],
+            'total' => $total
+        ]);
+
+        return redirect()->route('success');
+    }
+
+    public function stripeCancel()
+    {
+        return redirect()->route('cart')->with('error', 'Payment was cancelled.');
     }
 }

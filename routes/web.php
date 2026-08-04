@@ -27,6 +27,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/cart/add', [ShopController::class, 'addToCart'])->name('cart.add');
     Route::post('/checkout', [ShopController::class, 'checkout'])->name('checkout');
     Route::get('/success', [ShopController::class, 'success'])->name('success');
+    Route::post('/checkout/stripe', [ShopController::class, 'checkoutStripe'])->name('checkout.stripe');
+    Route::get('/checkout/stripe/success', [ShopController::class, 'stripeSuccess'])->name('checkout.stripe.success');
+    Route::get('/checkout/stripe/cancel', [ShopController::class, 'stripeCancel'])->name('checkout.stripe.cancel');
 });
 
 // Admin Routes

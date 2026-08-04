@@ -69,7 +69,7 @@
                     <span class="font-serif text-3xl font-bold text-gray-900 dark:text-white">${{ number_format($total, 2) }}</span>
                 </div>
 
-                <form action="{{ route('checkout') }}" method="POST" enctype="multipart/form-data">
+                <form id="checkout-form" action="{{ route('checkout') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="space-y-5 mb-8">
                         <div>
@@ -99,10 +99,26 @@
                         </div>
                     </div>
 
-                    <!-- KHQR Payment Section -->
-                    <div class="mb-8 bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-sm p-6 text-center">
-                        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gray-900 dark:text-white mb-4">KHQR Payment</p>
+                    <!-- Payment Method Selector -->
+                    <div class="mb-6">
+                        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gray-900 dark:text-white mb-4">Payment Method</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <label class="cursor-pointer border-2 border-primary rounded-lg p-4 flex flex-col items-center justify-center gap-2 transition-all" id="method-khqr-label" onclick="selectPaymentMethod('khqr')">
+                                <input type="radio" name="payment_method" value="khqr" class="hidden" checked>
+                                <i class="fa-solid fa-qrcode text-2xl text-primary"></i>
+                                <span class="text-xs font-bold uppercase tracking-widest text-primary">KHQR</span>
+                            </label>
+                            
+                            <label class="cursor-pointer border-2 border-gray-200 dark:border-gray-700 rounded-lg p-4 flex flex-col items-center justify-center gap-2 transition-all opacity-60 hover:opacity-100" id="method-card-label" onclick="selectPaymentMethod('card')">
+                                <input type="radio" name="payment_method" value="card" class="hidden">
+                                <i class="fa-brands fa-stripe text-3xl text-gray-400 dark:text-gray-500"></i>
+                                <span class="text-xs font-bold uppercase tracking-widest text-gray-500">Credit Card</span>
+                            </label>
+                        </div>
+                    </div>
 
+                    <!-- KHQR Payment Section -->
+                    <div id="khqr-section" class="mb-8 bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-sm p-6 text-center transition-all duration-300">
                         <div class="flex justify-center mb-4">
                             <div class="p-2 bg-white rounded-sm shadow-sm border border-gray-100 dark:border-gray-800">
                                 <img src="{{ asset('images/khqr.jpg') }}" alt="KHQR" class="w-40 h-auto" onerror="this.src='https://placehold.co/400x400/02478f/white?text=KHQR+DA+PANHA'">
@@ -114,7 +130,7 @@
 
                         <!-- Upload Receipt -->
                         <div class="text-left mb-5">
-                            <label class="block text-[10px] font-semibold uppercase tracking-[0.1em] text-gray-500 dark:text-gray-400 mb-2" for="receipt">Upload Receipt *</label>
+                            <label class="block text-[10px] font-semibold uppercase tracking-[0.1em] text-gray-500 dark:text-gray-400 mb-2" for="receipt">Upload Receipt (OCR Verified) *</label>
                             <input class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-sm file:border-0 file:text-xs file:font-semibold file:uppercase file:tracking-widest file:bg-gray-100 file:text-gray-900 hover:file:bg-gray-200 dark:file:bg-zinc-800 dark:file:text-white dark:hover:file:bg-zinc-700 transition" id="receipt" name="receipt" type="file" accept="image/*" required onchange="checkCheckoutReady()">
                         </div>
 
@@ -127,6 +143,12 @@
                         </div>
                     </div>
 
+                    <!-- Stripe Info Section -->
+                    <div id="stripe-section" class="hidden mb-8 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-sm p-6 text-center transition-all duration-300">
+                        <i class="fa-solid fa-lock text-3xl text-blue-500 mb-4"></i>
+                        <p class="text-sm text-blue-800 dark:text-blue-300">You will be redirected to Stripe to complete your purchase securely.</p>
+                    </div>
+
                     <button type="submit" id="place_order_btn" class="group w-full py-4 rounded-sm text-sm font-semibold uppercase tracking-[0.25em] flex items-center justify-center gap-3 transition-all duration-300 bg-gray-200 text-gray-400 dark:bg-zinc-800 dark:text-zinc-500 cursor-not-allowed" disabled>
                         Checkout
                         <i class="fa-solid fa-lock" id="btn_icon"></i>
@@ -134,16 +156,66 @@
                 </form>
 
                 <script>
+                    let currentMethod = 'khqr';
+
+                    function selectPaymentMethod(method) {
+                        currentMethod = method;
+                        const form = document.getElementById('checkout-form');
+                        
+                        const khqrLabel = document.getElementById('method-khqr-label');
+                        const cardLabel = document.getElementById('method-card-label');
+                        const khqrSection = document.getElementById('khqr-section');
+                        const stripeSection = document.getElementById('stripe-section');
+                        const receiptInput = document.getElementById('receipt');
+                        const confirmInput = document.getElementById('confirm_amount');
+
+                        if (method === 'khqr') {
+                            form.action = "{{ route('checkout') }}";
+                            khqrLabel.classList.add('border-primary');
+                            khqrLabel.classList.remove('border-gray-200', 'dark:border-gray-700', 'opacity-60');
+                            khqrLabel.querySelector('span').classList.add('text-primary');
+                            khqrLabel.querySelector('span').classList.remove('text-gray-500');
+
+                            cardLabel.classList.remove('border-primary');
+                            cardLabel.classList.add('border-gray-200', 'dark:border-gray-700', 'opacity-60');
+                            cardLabel.querySelector('span').classList.remove('text-primary');
+                            cardLabel.querySelector('span').classList.add('text-gray-500');
+
+                            khqrSection.classList.remove('hidden');
+                            stripeSection.classList.add('hidden');
+                            receiptInput.required = true;
+                            confirmInput.required = true;
+                        } else {
+                            form.action = "{{ route('checkout.stripe') }}";
+                            cardLabel.classList.add('border-primary');
+                            cardLabel.classList.remove('border-gray-200', 'dark:border-gray-700', 'opacity-60');
+                            cardLabel.querySelector('span').classList.add('text-primary');
+                            cardLabel.querySelector('span').classList.remove('text-gray-500');
+
+                            khqrLabel.classList.remove('border-primary');
+                            khqrLabel.classList.add('border-gray-200', 'dark:border-gray-700', 'opacity-60');
+                            khqrLabel.querySelector('span').classList.remove('text-primary');
+                            khqrLabel.querySelector('span').classList.add('text-gray-500');
+
+                            khqrSection.classList.add('hidden');
+                            stripeSection.classList.remove('hidden');
+                            receiptInput.required = false;
+                            confirmInput.required = false;
+                        }
+
+                        checkCheckoutReady();
+                    }
+
                     function checkCheckoutReady() {
                         const receipt = document.getElementById('receipt').files.length > 0;
                         const confirmed = document.getElementById('confirm_amount').checked;
                         const btn = document.getElementById('place_order_btn');
                         const icon = document.getElementById('btn_icon');
 
-                        if (receipt && confirmed) {
+                        if (currentMethod === 'card' || (receipt && confirmed)) {
                             btn.disabled = false;
                             btn.className = 'group w-full py-4 rounded-sm text-sm font-semibold uppercase tracking-[0.25em] flex items-center justify-center gap-3 transition-all duration-300 btn-primary hover:tracking-[0.35em]';
-                            icon.className = 'fa-solid fa-arrow-right-long transition-transform duration-300 group-hover:translate-x-1';
+                            icon.className = currentMethod === 'card' ? 'fa-brands fa-stripe-s transition-transform duration-300 group-hover:rotate-12' : 'fa-solid fa-arrow-right-long transition-transform duration-300 group-hover:translate-x-1';
                         } else {
                             btn.disabled = true;
                             btn.className = 'group w-full py-4 rounded-sm text-sm font-semibold uppercase tracking-[0.25em] flex items-center justify-center gap-3 transition-all duration-300 bg-gray-200 text-gray-400 dark:bg-zinc-800 dark:text-zinc-500 cursor-not-allowed';
