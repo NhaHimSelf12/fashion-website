@@ -157,9 +157,9 @@ class ShopController extends Controller
                 $image = $request->file('receipt');
                 $base64 = base64_encode(file_get_contents($image->path()));
                 
-                $prompt = "Extract the transfer amount and the transaction date from this receipt. The expected amount is {$total}. Today's date is " . date('Y-m-d') . ". Return ONLY a JSON object with this exact format: {\"status\": \"SUCCESS|FAIL\", \"reason\": \"Your reason here\"}. Status is SUCCESS only if the amount matches exactly and the date is today or yesterday. If no date is found, you can assume it is today. DO NOT return markdown, just the raw JSON.";
+                $prompt = "You are a strict financial auditor. Extract the total transfer amount and the transaction date from this receipt image. The expected amount is exactly \${$total}. Today's date is " . date('Y-m-d') . ". Return ONLY a raw JSON object (no markdown) with this format: {\"status\": \"SUCCESS\" or \"FAIL\", \"reason\": \"Explanation\"}. Status MUST be FAIL if the amount transferred is less than {$total}, or if the date is completely wrong. If the receipt is illegible or not a receipt, return FAIL.";
                 
-                $response = \Illuminate\Support\Facades\Http::timeout(15)->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . env('GEMINI_API_KEY'), [
+                $response = \Illuminate\Support\Facades\Http::timeout(20)->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . env('GEMINI_API_KEY'), [
                     'contents' => [
                         [
                             'parts' => [
@@ -175,18 +175,29 @@ class ShopController extends Controller
                     ]
                 ]);
                 
+                if ($response->failed()) {
+                    return back()->with('error', 'Receipt Verification API Error: ' . $response->body());
+                }
+
                 $text = $response->json('candidates.0.content.parts.0.text');
                 if ($text) {
                     preg_match('/\{.*\}/s', $text, $matches);
                     if (isset($matches[0])) {
                         $result = json_decode($matches[0], true);
-                        if (isset($result['status']) && $result['status'] === 'FAIL') {
-                            return back()->with('error', 'Receipt Verification Failed: ' . ($result['reason'] ?? 'Invalid amount or date.'));
+                        if (!isset($result['status'])) {
+                            return back()->with('error', 'AI could not determine the receipt status.');
                         }
+                        if ($result['status'] === 'FAIL') {
+                            return back()->with('error', 'Receipt Rejected: ' . ($result['reason'] ?? 'Invalid amount or date.'));
+                        }
+                    } else {
+                        return back()->with('error', 'AI returned an invalid format: ' . $text);
                     }
+                } else {
+                    return back()->with('error', 'AI failed to read the receipt image.');
                 }
             } catch (\Exception $e) {
-                // If API fails, we skip verification or log it
+                return back()->with('error', 'Receipt verification service error: ' . $e->getMessage());
             }
         }
 
