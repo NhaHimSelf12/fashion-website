@@ -103,15 +103,15 @@
                     <div class="mb-6">
                         <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gray-900 dark:text-white mb-4">Payment Method</p>
                         <div class="grid grid-cols-2 gap-4">
-                            <label class="cursor-pointer border-2 border-primary rounded-lg p-4 flex flex-col items-center justify-center gap-2 transition-all" id="method-khqr-label" onclick="selectPaymentMethod('khqr')">
+                            <label class="cursor-pointer border-2 border-gray-900 dark:border-white rounded-lg p-4 flex flex-col items-center justify-center gap-2 transition-all" id="method-khqr-label" onclick="selectPaymentMethod('khqr')">
                                 <input type="radio" name="payment_method" value="khqr" class="hidden" checked>
-                                <i class="fa-solid fa-qrcode text-2xl text-primary"></i>
-                                <span class="text-xs font-bold uppercase tracking-widest text-primary">KHQR</span>
+                                <i class="fa-solid fa-qrcode text-2xl text-gray-900 dark:text-white"></i>
+                                <span class="text-xs font-bold uppercase tracking-widest text-gray-900 dark:text-white">KHQR</span>
                             </label>
                             
                             <label class="cursor-pointer border-2 border-gray-200 dark:border-gray-700 rounded-lg p-4 flex flex-col items-center justify-center gap-2 transition-all opacity-60 hover:opacity-100" id="method-card-label" onclick="selectPaymentMethod('card')">
                                 <input type="radio" name="payment_method" value="card" class="hidden">
-                                <i class="fa-brands fa-stripe text-3xl text-gray-400 dark:text-gray-500"></i>
+                                <i class="fa-regular fa-credit-card text-2xl text-gray-400 dark:text-gray-500"></i>
                                 <span class="text-xs font-bold uppercase tracking-widest text-gray-500">Credit Card</span>
                             </label>
                         </div>
@@ -171,15 +171,19 @@
 
                         if (method === 'khqr') {
                             form.action = "{{ route('checkout') }}";
-                            khqrLabel.classList.add('border-primary');
+                            khqrLabel.classList.add('border-gray-900', 'dark:border-white');
                             khqrLabel.classList.remove('border-gray-200', 'dark:border-gray-700', 'opacity-60');
-                            khqrLabel.querySelector('span').classList.add('text-primary');
+                            khqrLabel.querySelector('span').classList.add('text-gray-900', 'dark:text-white');
                             khqrLabel.querySelector('span').classList.remove('text-gray-500');
+                            khqrLabel.querySelector('i').classList.add('text-gray-900', 'dark:text-white');
+                            khqrLabel.querySelector('i').classList.remove('text-gray-400', 'dark:text-gray-500');
 
-                            cardLabel.classList.remove('border-primary');
+                            cardLabel.classList.remove('border-gray-900', 'dark:border-white');
                             cardLabel.classList.add('border-gray-200', 'dark:border-gray-700', 'opacity-60');
-                            cardLabel.querySelector('span').classList.remove('text-primary');
+                            cardLabel.querySelector('span').classList.remove('text-gray-900', 'dark:text-white');
                             cardLabel.querySelector('span').classList.add('text-gray-500');
+                            cardLabel.querySelector('i').classList.remove('text-gray-900', 'dark:text-white');
+                            cardLabel.querySelector('i').classList.add('text-gray-400', 'dark:text-gray-500');
 
                             khqrSection.classList.remove('hidden');
                             stripeSection.classList.add('hidden');
@@ -187,15 +191,19 @@
                             confirmInput.required = true;
                         } else {
                             form.action = "{{ route('checkout.stripe') }}";
-                            cardLabel.classList.add('border-primary');
+                            cardLabel.classList.add('border-gray-900', 'dark:border-white');
                             cardLabel.classList.remove('border-gray-200', 'dark:border-gray-700', 'opacity-60');
-                            cardLabel.querySelector('span').classList.add('text-primary');
+                            cardLabel.querySelector('span').classList.add('text-gray-900', 'dark:text-white');
                             cardLabel.querySelector('span').classList.remove('text-gray-500');
+                            cardLabel.querySelector('i').classList.add('text-gray-900', 'dark:text-white');
+                            cardLabel.querySelector('i').classList.remove('text-gray-400', 'dark:text-gray-500');
 
-                            khqrLabel.classList.remove('border-primary');
+                            khqrLabel.classList.remove('border-gray-900', 'dark:border-white');
                             khqrLabel.classList.add('border-gray-200', 'dark:border-gray-700', 'opacity-60');
-                            khqrLabel.querySelector('span').classList.remove('text-primary');
+                            khqrLabel.querySelector('span').classList.remove('text-gray-900', 'dark:text-white');
                             khqrLabel.querySelector('span').classList.add('text-gray-500');
+                            khqrLabel.querySelector('i').classList.remove('text-gray-900', 'dark:text-white');
+                            khqrLabel.querySelector('i').classList.add('text-gray-400', 'dark:text-gray-500');
 
                             khqrSection.classList.add('hidden');
                             stripeSection.classList.remove('hidden');
