@@ -45,7 +45,7 @@
     </div>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
       <a href="{{ route('shop') }}?search=classic" class="group relative h-[480px] overflow-hidden reveal" style="--d:0s">
-        <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=1200&auto=format&fit=crop" alt="Classic Tees" class="w-full h-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-110">
+        <img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=1200&auto=format&fit=crop" alt="Classic Tees" class="w-full h-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-110">
         <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
         <div class="absolute bottom-0 left-0 right-0 p-8 translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
           <h3 class="font-serif text-2xl font-bold text-white mb-2">Classic Tees</h3>
@@ -61,7 +61,7 @@
         </div>
       </a>
       <a href="{{ route('shop') }}?search=oversize" class="group relative h-[480px] overflow-hidden reveal" style="--d:.3s">
-        <img src="https://images.unsplash.com/photo-1503341504253-dff4815485f1?q=80&w=1200&auto=format&fit=crop" alt="Oversized Fit" class="w-full h-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-110">
+        <img src="https://images.unsplash.com/photo-1618354691373-d851c5c3a990?q=80&w=1200&auto=format&fit=crop" alt="Oversized Fit" class="w-full h-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-110">
         <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
         <div class="absolute bottom-0 left-0 right-0 p-8 translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
           <h3 class="font-serif text-2xl font-bold text-white mb-2">Oversized Fit</h3>
