@@ -179,9 +179,9 @@
             <div class="flex justify-between h-20 items-center">
                 <!-- Logo -->
                 <div class="flex-shrink-0 flex items-center gap-3">
-                    <img src="{{ asset('images/logo.jpg') }}" alt="Logo" class="h-10 w-10 object-contain bg-white rounded-full p-0.5 shadow-sm">
+                    <img src="{{ asset('images/logo.jpg') }}" alt="Logo" class="h-8 w-8 md:h-10 md:w-10 object-contain bg-white rounded-full p-0.5 shadow-sm">
                     <a href="{{ route('home') }}"
-                        class="text-xl md:text-2xl font-serif font-bold text-gray-900 dark:text-white tracking-wider uppercase">
+                        class="text-sm sm:text-xl md:text-2xl font-serif font-bold text-gray-900 dark:text-white tracking-wider uppercase truncate max-w-[120px] sm:max-w-none">
                         Fusion T-shirt
                     </a>
                 </div>
@@ -206,6 +206,12 @@
                         @endif
                     </a>
                     @endauth
+                    @guest
+                    <div class="flex items-center bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-md rounded-full p-1 shadow-inner border border-gray-200/50 dark:border-gray-700/50 relative z-[60]">
+                        <a href="{{ route('login') }}" class="px-2.5 py-1.5 text-[9px] sm:text-[10px] font-bold uppercase tracking-widest rounded-full hover:bg-white dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 transition-all">Log In</a>
+                        <a href="{{ route('register') }}" class="px-2.5 py-1.5 text-[9px] sm:text-[10px] font-bold uppercase tracking-widest rounded-full bg-primary dark:bg-white text-white dark:text-gray-900 shadow-sm transition-all ml-0.5">Sign Up</a>
+                    </div>
+                    @endguest
                 </div>
 
                 <!-- Desktop Menu -->
@@ -445,6 +451,11 @@
         document.querySelectorAll('form[action="{{ route('cart.add') }}"]').forEach(form => {
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
+                
+                @guest
+                window.location.href = "{{ route('login') }}";
+                return;
+                @endguest
                 
                 const btn = this.querySelector('button[type="submit"]');
                 const originalHtml = btn.innerHTML;
