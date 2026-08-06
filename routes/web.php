@@ -4,6 +4,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ShopController;
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ImageController;
+
+// Image Routes
+Route::get('/image/product/{id}', [ImageController::class, 'product'])->name('image.product');
+Route::get('/image/category/{id}', [ImageController::class, 'category'])->name('image.category');
 
 Route::get('/', [ShopController::class, 'index'])->name('home');
 Route::get('/shop', [ShopController::class, 'shop'])->name('shop');

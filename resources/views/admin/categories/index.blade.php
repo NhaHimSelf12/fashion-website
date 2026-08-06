@@ -24,7 +24,7 @@
                     <label class="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2">Category Image</label>
                     @if(isset($category) && $category->image)
                         <div class="mb-2">
-                            <img src="{{ str_starts_with($category->image, 'data:') ? $category->image : asset($category->image) }}" alt="{{ $category->name }}" class="w-24 h-24 object-cover rounded-lg shadow-sm">
+                            <img src="{{ str_starts_with($category->image, 'data:') ? route('image.category', $category->id) : asset($category->image) }}" alt="{{ $category->name }}" class="w-24 h-24 object-cover rounded-lg shadow-sm">
                         </div>
                     @endif
                     <input type="file" name="image" accept="image/*" class="w-full px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
@@ -59,7 +59,7 @@
                         <td class="py-3 px-4">{{ $cat->id }}</td>
                         <td class="py-3 px-4">
                             @if($cat->image)
-                                <img src="{{ str_starts_with($cat->image, 'data:') ? $cat->image : asset($cat->image) }}" alt="{{ $cat->name }}" class="w-12 h-12 object-cover rounded-lg shadow-sm">
+                                <img src="{{ str_starts_with($cat->image, 'data:') ? route('image.category', $cat->id) : asset($cat->image) }}" alt="{{ $cat->name }}" class="w-12 h-12 object-cover rounded-lg shadow-sm">
                             @else
                                 <div class="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center text-gray-400 dark:text-gray-500">
                                     <i class="fa-solid fa-image"></i>
