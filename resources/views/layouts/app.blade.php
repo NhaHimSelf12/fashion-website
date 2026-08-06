@@ -258,7 +258,7 @@
                             @if(Auth::user()->avatar)
                                 <img src="{{ str_starts_with(Auth::user()->avatar, 'data:') || str_starts_with(Auth::user()->avatar, 'http') ? Auth::user()->avatar : asset(Auth::user()->avatar) }}"
                                     class="w-8 h-8 rounded-full object-cover border border-gray-200 dark:border-gray-700"
-                                    alt="Avatar">
+                                    alt="Avatar" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=random&size=128';">
                             @else
                                 <div
                                     class="w-8 h-8 rounded-full bg-gray-900 dark:bg-white flex items-center justify-center text-white dark:text-gray-900 font-bold text-sm">
@@ -334,7 +334,7 @@
                                 @if(Auth::user()->avatar)
                                     <img src="{{ str_starts_with(Auth::user()->avatar, 'data:') || str_starts_with(Auth::user()->avatar, 'http') ? Auth::user()->avatar : asset(Auth::user()->avatar) }}"
                                         class="w-10 h-10 rounded-full object-cover border-2 border-transparent group-hover:border-primary transition-all"
-                                        alt="Avatar">
+                                        alt="Avatar" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=random&size=128';">
                                 @else
                                     <div
                                         class="w-10 h-10 rounded-full bg-gray-900 dark:bg-white flex items-center justify-center text-white dark:text-gray-900 font-bold text-lg">
