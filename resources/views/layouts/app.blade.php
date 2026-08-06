@@ -427,10 +427,10 @@
                     <h3 class="text-sm font-semibold text-gray-900 dark:text-white tracking-wider uppercase mb-4">
                         Contact</h3>
                     <div class="flex space-x-6">
-                        <a href="https://t.me/Nhaluckyy168"
+                        <a href="https://t.me/Nhaluckyy168" target="_blank"
                             class="text-gray-400 hover:text-[#0088cc] dark:hover:text-[#0088cc] transition-colors"><i
                                 class="fa-brands fa-telegram text-xl"></i></a>
-                        <a href="https://www.facebook.com/share/191ZmF1ADm/?mibextid=wwXIfr"
+                        <a href="https://www.facebook.com/share/191ZmF1ADm/?mibextid=wwXIfr" target="_blank"
                             class="text-gray-400 hover:text-[#1877F2] dark:hover:text-[#1877F2] transition-colors"><i
                                 class="fa-brands fa-facebook text-xl"></i></a>
                         <a href="#" class="text-gray-400 hover:text-black dark:hover:text-white transition-colors"><i
