@@ -42,9 +42,16 @@
                             <span class="sm:hidden text-xs uppercase tracking-widest text-gray-400">Quantity</span>
                             <span class="font-medium text-gray-900 dark:text-white">x{{ $item['quantity'] }}</span>
                         </div>
-                        <div class="w-full sm:w-1/5 flex sm:justify-end items-center justify-between sm:justify-end">
-                            <span class="sm:hidden text-xs uppercase tracking-widest text-gray-400">Total</span>
-                            <span class="font-serif font-bold text-gray-900 dark:text-white text-lg">${{ number_format($item['price'] * $item['quantity'], 2) }}</span>
+                        <div class="w-full sm:w-1/5 flex flex-col sm:items-end justify-between sm:justify-center gap-2">
+                            <div class="flex justify-between w-full sm:w-auto items-center">
+                                <span class="sm:hidden text-xs uppercase tracking-widest text-gray-400">Total</span>
+                                <span class="font-serif font-bold text-gray-900 dark:text-white text-lg">${{ number_format($item['price'] * $item['quantity'], 2) }}</span>
+                            </div>
+                            <form action="{{ route('cart.remove') }}" method="POST" class="text-right">
+                                @csrf
+                                <input type="hidden" name="product_id" value="{{ $id }}">
+                                <button type="submit" class="text-xs text-red-500 hover:text-red-700 uppercase tracking-wider font-semibold"><i class="fa-solid fa-trash-can mr-1"></i> Remove</button>
+                            </form>
                         </div>
                     </div>
                 @endforeach

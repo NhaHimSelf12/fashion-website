@@ -130,6 +130,19 @@ class ShopController extends Controller
         return redirect()->route('shop')->with('success', 'Product added to cart successfully!');
     }
 
+    public function removeFromCart(Request $request)
+    {
+        $id = $request->input('product_id');
+        $cart = session()->get('cart', []);
+
+        if (isset($cart[$id])) {
+            unset($cart[$id]);
+            session()->put('cart', $cart);
+        }
+
+        return back()->with('success', 'Product removed from cart.');
+    }
+
     public function checkout(Request $request)
     {
         $request->validate([

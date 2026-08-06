@@ -25,6 +25,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/profile/update', [ShopController::class, 'updateProfile'])->name('profile.update');
     Route::get('/cart', [ShopController::class, 'cart'])->name('cart');
     Route::post('/cart/add', [ShopController::class, 'addToCart'])->name('cart.add');
+    Route::post('/cart/remove', [ShopController::class, 'removeFromCart'])->name('cart.remove');
     Route::post('/checkout', [ShopController::class, 'checkout'])->name('checkout');
     Route::get('/success', [ShopController::class, 'success'])->name('success');
     Route::post('/checkout/stripe', [ShopController::class, 'checkoutStripe'])->name('checkout.stripe');
