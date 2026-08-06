@@ -54,7 +54,7 @@
           @foreach($products as $product)
           <div class="group relative reveal" style="--d: {{ ($loop->index % 4) * 0.1 }}s">
             <div class="product-img-wrapper relative aspect-[3/4] mb-5 overflow-hidden">
-              <img src="{{ !empty($product['image']) ? (str_starts_with($product['image'], 'data:') || str_starts_with($product['image'], 'http') ? $product['image'] : asset($product['image'])) : 'https://ui-avatars.com/api/?name='.urlencode($product['name']).'&background=random&color=fff&size=512' }}" alt="{{ $product['name'] }}" class="product-img w-full h-full object-cover {{ $product['stock'] <= 0 ? 'grayscale opacity-70' : '' }}" onerror="this.onerror=null;this.src='{{ asset('images/logo.jpg') }}';">
+              <img src="{{ !empty($product['image']) ? (str_starts_with($product['image'], 'data:') || str_starts_with($product['image'], 'http') ? $product['image'] : asset($product['image'])) : asset('images/logo.jpg') }}" alt="{{ $product['name'] }}" class="product-img w-full h-full object-cover {{ $product['stock'] <= 0 ? 'grayscale opacity-70' : '' }}" onerror="this.onerror=null;this.src='{{ asset('images/logo.jpg') }}';">
               @if($product['discount_percent'] > 0)
                   <span class="absolute top-4 left-4 bg-red-600 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 z-10 shadow-sm">-{{ $product['discount_percent'] }}%</span>
               @else
