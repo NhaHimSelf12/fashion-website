@@ -54,7 +54,7 @@
           @foreach($products as $product)
           <div class="group relative reveal" style="--d: {{ ($loop->index % 4) * 0.1 }}s">
             <div class="product-img-wrapper relative aspect-[3/4] mb-5 overflow-hidden">
-              <img src="{{ $product['image'] }}" alt="{{ $product['name'] }}" class="product-img w-full h-full object-cover">
+              <img src="{{ !empty($product['image']) ? (str_starts_with($product['image'], 'data:') || str_starts_with($product['image'], 'http') ? $product['image'] : asset($product['image'])) : 'https://ui-avatars.com/api/?name='.urlencode($product['name']).'&background=random&color=fff&size=512' }}" alt="{{ $product['name'] }}" class="product-img w-full h-full object-cover" onerror="this.onerror=null;this.src='{{ asset('images/logo.jpg') }}';">
               <span class="absolute top-4 left-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 z-10">New</span>
               <button type="button" class="absolute top-4 right-4 w-10 h-10 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm text-gray-900 dark:text-white flex items-center justify-center opacity-0 -translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 hover:bg-gray-900 hover:text-white dark:hover:bg-white dark:hover:text-gray-900 z-10" aria-label="Add to wishlist">
                 <i class="fa-regular fa-heart"></i>
