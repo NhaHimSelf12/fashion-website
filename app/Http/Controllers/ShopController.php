@@ -16,8 +16,7 @@ class ShopController extends Controller
 {
     public function index()
     {
-        $latestProducts = Product::latest()->take(4)->get();
-        return view('home', compact('latestProducts'));
+        return view('home');
     }
 
     public function shop(Request $request)
@@ -105,19 +104,12 @@ class ShopController extends Controller
             return redirect()->back()->with('error', 'Product not found.');
         }
 
-        if ($product->stock <= 0) {
-            return redirect()->back()->with('error', 'Sorry, this product is out of stock.');
-        }
-
         $cart = session()->get('cart', []);
 
         if (!isset($cart[$id])) {
-            $finalPrice = $product->price * (1 - $product->discount_percent / 100);
             $cart[$id] = [
                 'name' => $product->name,
-                'price' => $finalPrice,
-                'original_price' => $product->price,
-                'discount_percent' => $product->discount_percent,
+                'price' => $product->price,
                 'image' => $product->image ?? 'https://via.placeholder.com/150',
                 'quantity' => 1
             ];

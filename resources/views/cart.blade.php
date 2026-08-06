@@ -35,15 +35,7 @@
                             </div>
                             <div>
                                 <h3 class="font-serif text-lg font-bold text-gray-900 dark:text-white mb-1">{{ $item['name'] }}</h3>
-                                @if(isset($item['discount_percent']) && $item['discount_percent'] > 0)
-                                    <p class="text-sm text-gray-500 dark:text-gray-400">
-                                        <span class="line-through text-xs mr-1">${{ number_format($item['original_price'], 2) }}</span>
-                                        <span class="text-red-600 font-bold">${{ number_format($item['price'], 2) }}</span>
-                                        <span class="ml-2 bg-red-100 text-red-600 text-[9px] px-1.5 py-0.5 rounded font-bold uppercase">-{{ $item['discount_percent'] }}%</span>
-                                    </p>
-                                @else
-                                    <p class="text-sm text-gray-500 dark:text-gray-400">${{ number_format($item['price'], 2) }}</p>
-                                @endif
+                                <p class="text-sm text-gray-500 dark:text-gray-400">${{ number_format($item['price'], 2) }}</p>
                             </div>
                         </div>
                         <div class="w-full sm:w-1/5 flex sm:justify-center items-center justify-between sm:justify-center">

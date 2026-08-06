@@ -54,13 +54,8 @@
           @foreach($products as $product)
           <div class="group relative reveal" style="--d: {{ ($loop->index % 4) * 0.1 }}s">
             <div class="product-img-wrapper relative aspect-[3/4] mb-5 overflow-hidden">
-              <img src="{{ $product['image'] }}" alt="{{ $product['name'] }}" class="product-img w-full h-full object-cover {{ $product['stock'] == 0 ? 'opacity-70 grayscale' : '' }}">
-              <div class="absolute top-4 left-4 flex flex-col gap-2 z-10">
-                <span class="bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 shadow-sm">New</span>
-                @if($product['discount_percent'] > 0)
-                  <span class="bg-red-600 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 shadow-sm">-{{ $product['discount_percent'] }}% OFF</span>
-                @endif
-              </div>
+              <img src="{{ $product['image'] }}" alt="{{ $product['name'] }}" class="product-img w-full h-full object-cover">
+              <span class="absolute top-4 left-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 z-10">New</span>
               <button type="button" class="absolute top-4 right-4 w-10 h-10 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm text-gray-900 dark:text-white flex items-center justify-center opacity-0 -translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 hover:bg-gray-900 hover:text-white dark:hover:bg-white dark:hover:text-gray-900 z-10" aria-label="Add to wishlist">
                 <i class="fa-regular fa-heart"></i>
               </button>
@@ -68,45 +63,18 @@
                 <form action="{{ route('cart.add') }}" method="POST">
                     @csrf
                     <input type="hidden" name="product_id" value="{{ $product['id'] }}">
-                    @if($product['stock'] > 0)
-                      <button type="submit" class="w-full bg-white text-gray-900 hover:bg-gray-900 hover:text-white dark:bg-gray-900 dark:text-white dark:hover:bg-white dark:hover:text-gray-900 font-medium py-3.5 text-xs uppercase tracking-[0.2em] transition-colors duration-300 flex items-center justify-center shadow-lg">
-                        <i class="fa-solid fa-cart-shopping mr-2"></i> Add to Cart
-                      </button>
-                    @else
-                      <button type="button" disabled class="w-full bg-gray-200 text-gray-500 dark:bg-gray-800 dark:text-gray-500 font-medium py-3.5 text-xs uppercase tracking-[0.2em] cursor-not-allowed flex items-center justify-center shadow-lg">
-                        <i class="fa-solid fa-ban mr-2"></i> Out of Stock
-                      </button>
-                    @endif
+                    <button type="submit" class="w-full bg-white text-gray-900 hover:bg-gray-900 hover:text-white dark:bg-gray-900 dark:text-white dark:hover:bg-white dark:hover:text-gray-900 font-medium py-3.5 text-xs uppercase tracking-[0.2em] transition-colors duration-300 flex items-center justify-center shadow-lg">
+                      <i class="fa-solid fa-cart-shopping mr-2"></i> Add to Cart
+                    </button>
                 </form>
               </div>
             </div>
             <div class="flex justify-between items-start gap-4">
-              <div class="flex-1">
+              <div>
                 <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-1 group-hover:underline underline-offset-4 decoration-1">{{ $product['name'] }}</h3>
-                <div class="flex items-center gap-1 mb-1">
-                  <div class="flex text-yellow-400 text-[10px]">
-                    @for($i = 1; $i <= 5; $i++)
-                      @if($i <= $product['rating'])
-                        <i class="fa-solid fa-star"></i>
-                      @elseif($i - 0.5 <= $product['rating'])
-                        <i class="fa-solid fa-star-half-stroke"></i>
-                      @else
-                        <i class="fa-regular fa-star text-gray-300 dark:text-gray-600"></i>
-                      @endif
-                    @endfor
-                  </div>
-                  <span class="text-[10px] text-gray-500">({{ number_format($product['rating'], 1) }})</span>
-                </div>
-                <p class="text-gray-500 dark:text-gray-400 text-xs font-light line-clamp-1 max-w-[200px]">{{ $product['description'] ?? 'Premium quality essential' }}</p>
+                <p class="text-gray-500 dark:text-gray-400 text-xs font-light line-clamp-1 max-w-[200px]">{{ $product['desc'] ?? 'Premium quality essential' }}</p>
               </div>
-              <div class="text-right flex flex-col items-end justify-start">
-                @if($product['discount_percent'] > 0)
-                  <span class="text-[10px] text-gray-400 line-through mb-0.5">${{ number_format($product['price'], 2) }}</span>
-                  <span class="text-sm font-bold text-red-600 tracking-wide whitespace-nowrap">${{ number_format($product['price'] * (1 - $product['discount_percent'] / 100), 2) }}</span>
-                @else
-                  <span class="text-sm font-medium text-gray-900 dark:text-white tracking-wide whitespace-nowrap">${{ number_format($product['price'], 2) }}</span>
-                @endif
-              </div>
+              <span class="text-sm font-medium text-gray-900 dark:text-white tracking-wide whitespace-nowrap">${{ number_format($product['price'], 2) }}</span>
             </div>
           </div>
           @endforeach

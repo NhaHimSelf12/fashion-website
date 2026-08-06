@@ -81,57 +81,62 @@
       <a href="{{ route('shop') }}" class="group mt-6 md:mt-0 text-sm uppercase tracking-widest text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">View All <i class="fa-solid fa-arrow-right ml-2 transition-transform duration-300 group-hover:translate-x-1"></i></a>
     </div>
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-      @foreach($latestProducts as $product)
-      <div class="product-card glass-card group block reveal" style="--d:{{ $loop->index * 0.1 }}s">
-        <div class="product-img-wrapper relative aspect-[3/4] overflow-hidden">
-          <img src="{{ $product->image ?: 'https://via.placeholder.com/800' }}" alt="{{ $product->name }}" class="product-img w-full h-full object-cover {{ $product->stock == 0 ? 'opacity-70 grayscale' : '' }}">
-          
-          <div class="absolute top-4 left-4 flex flex-col gap-2 z-10">
-            <span class="bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 shadow-sm">New</span>
-            @if($product->discount_percent > 0)
-              <span class="bg-red-600 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 shadow-sm">-{{ $product->discount_percent }}% OFF</span>
-            @endif
-          </div>
-
-          <div class="absolute inset-x-4 bottom-4 opacity-0 translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 z-20">
-            <form action="{{ route('cart.add') }}" method="POST">
-                @csrf
-                <input type="hidden" name="product_id" value="{{ $product->id }}">
-                @if($product->stock > 0)
-                  <button type="submit" class="btn-primary block w-full text-center py-3 text-xs uppercase tracking-widest"><i class="fa-solid fa-cart-shopping mr-2"></i>Quick Add</button>
-                @else
-                  <button type="button" disabled class="block w-full text-center py-3 text-xs uppercase tracking-widest bg-gray-200 text-gray-500 dark:bg-gray-800 dark:text-gray-500 cursor-not-allowed"><i class="fa-solid fa-ban mr-2"></i>Out of Stock</button>
-                @endif
-            </form>
+      <!-- Product 1 -->
+      <a href="{{ route('shop') }}" class="product-card glass-card group block reveal" style="--d:0s">
+        <div class="product-img-wrapper relative aspect-[3/4]">
+          <img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800&auto=format&fit=crop" alt="Essential White Tee" class="product-img w-full h-full object-cover">
+          <span class="absolute top-4 left-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-[10px] font-bold uppercase tracking-widest px-3 py-1.5">New</span>
+          <div class="absolute inset-x-4 bottom-4 opacity-0 translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
+            <span class="btn-primary block w-full text-center py-3 text-xs uppercase tracking-widest"><i class="fa-solid fa-cart-shopping mr-2"></i>Quick Add</span>
           </div>
         </div>
         <div class="p-5">
-          <h3 class="text-sm font-semibold text-gray-900 dark:text-white truncate mb-1">{{ $product->name }}</h3>
-          <div class="flex items-center gap-1 mb-1">
-            <div class="flex text-yellow-400 text-[10px]">
-              @for($i = 1; $i <= 5; $i++)
-                @if($i <= $product->rating)
-                  <i class="fa-solid fa-star"></i>
-                @elseif($i - 0.5 <= $product->rating)
-                  <i class="fa-solid fa-star-half-stroke"></i>
-                @else
-                  <i class="fa-regular fa-star text-gray-300 dark:text-gray-600"></i>
-                @endif
-              @endfor
-            </div>
-            <span class="text-[10px] text-gray-500">({{ number_format($product->rating, 1) }})</span>
-          </div>
-          <div class="text-left mt-1">
-            @if($product->discount_percent > 0)
-              <span class="text-xs text-gray-400 line-through mr-1">${{ number_format($product->price, 2) }}</span>
-              <span class="text-sm font-bold text-red-600">${{ number_format($product->price * (1 - $product->discount_percent / 100), 2) }}</span>
-            @else
-              <span class="text-sm text-gray-500 dark:text-gray-400">${{ number_format($product->price, 2) }}</span>
-            @endif
+          <h3 class="text-sm font-medium text-gray-900 dark:text-white truncate">Essential White Tee</h3>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">$24.00</p>
+        </div>
+      </a>
+      <!-- Product 2 -->
+      <a href="{{ route('shop') }}" class="product-card glass-card group block reveal" style="--d:.1s">
+        <div class="product-img-wrapper relative aspect-[3/4]">
+          <img src="https://images.unsplash.com/photo-1618354691373-d851c5c3a990?q=80&w=800&auto=format&fit=crop" alt="Midnight Black Tee" class="product-img w-full h-full object-cover">
+          <span class="absolute top-4 left-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-[10px] font-bold uppercase tracking-widest px-3 py-1.5">New</span>
+          <div class="absolute inset-x-4 bottom-4 opacity-0 translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
+            <span class="btn-primary block w-full text-center py-3 text-xs uppercase tracking-widest"><i class="fa-solid fa-cart-shopping mr-2"></i>Quick Add</span>
           </div>
         </div>
-      </div>
-      @endforeach
+        <div class="p-5">
+          <h3 class="text-sm font-medium text-gray-900 dark:text-white truncate">Midnight Black Tee</h3>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">$26.00</p>
+        </div>
+      </a>
+      <!-- Product 3 -->
+      <a href="{{ route('shop') }}" class="product-card glass-card group block reveal" style="--d:.2s">
+        <div class="product-img-wrapper relative aspect-[3/4]">
+          <img src="https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?q=80&w=800&auto=format&fit=crop" alt="Vintage Graphic Tee" class="product-img w-full h-full object-cover">
+          <span class="absolute top-4 left-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-[10px] font-bold uppercase tracking-widest px-3 py-1.5">New</span>
+          <div class="absolute inset-x-4 bottom-4 opacity-0 translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
+            <span class="btn-primary block w-full text-center py-3 text-xs uppercase tracking-widest"><i class="fa-solid fa-cart-shopping mr-2"></i>Quick Add</span>
+          </div>
+        </div>
+        <div class="p-5">
+          <h3 class="text-sm font-medium text-gray-900 dark:text-white truncate">Vintage Graphic Tee</h3>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">$29.00</p>
+        </div>
+      </a>
+      <!-- Product 4 -->
+      <a href="{{ route('shop') }}" class="product-card glass-card group block reveal" style="--d:.3s">
+        <div class="product-img-wrapper relative aspect-[3/4]">
+          <img src="https://images.unsplash.com/photo-1562157873-818bc0726f68?q=80&w=800&auto=format&fit=crop" alt="Oversized Sand Tee" class="product-img w-full h-full object-cover">
+          <span class="absolute top-4 left-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-[10px] font-bold uppercase tracking-widest px-3 py-1.5">New</span>
+          <div class="absolute inset-x-4 bottom-4 opacity-0 translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
+            <span class="btn-primary block w-full text-center py-3 text-xs uppercase tracking-widest"><i class="fa-solid fa-cart-shopping mr-2"></i>Quick Add</span>
+          </div>
+        </div>
+        <div class="p-5">
+          <h3 class="text-sm font-medium text-gray-900 dark:text-white truncate">Oversized Sand Tee</h3>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">$32.00</p>
+        </div>
+      </a>
     </div>
   </section>
 
