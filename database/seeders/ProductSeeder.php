@@ -156,6 +156,7 @@ class ProductSeeder extends Seeder
                 'description' => $data['description'],
                 'price' => $data['price'],
                 'image' => '', // Leave empty as requested
+                'stock' => 50,
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
