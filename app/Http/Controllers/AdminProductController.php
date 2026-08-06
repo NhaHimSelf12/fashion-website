@@ -31,6 +31,9 @@ class AdminProductController extends Controller
             'name' => 'required|string|max:255',
             'category_id' => 'nullable|exists:categories,id',
             'price' => 'required|numeric',
+            'stock' => 'required|integer|min:0',
+            'rating' => 'required|numeric|min:0|max:5',
+            'discount_percent' => 'required|integer|min:0|max:100',
             'description' => 'nullable|string',
             'image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
@@ -60,6 +63,9 @@ class AdminProductController extends Controller
             'name' => 'required|string|max:255',
             'category_id' => 'nullable|exists:categories,id',
             'price' => 'required|numeric',
+            'stock' => 'required|integer|min:0',
+            'rating' => 'required|numeric|min:0|max:5',
+            'discount_percent' => 'required|integer|min:0|max:100',
             'description' => 'nullable|string',
             'image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);

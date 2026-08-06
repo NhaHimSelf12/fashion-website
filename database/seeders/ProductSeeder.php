@@ -155,6 +155,9 @@ class ProductSeeder extends Seeder
                 'name' => $data['name'],
                 'description' => $data['description'],
                 'price' => $data['price'],
+                'stock' => rand(0, 10) > 1 ? rand(10, 100) : 0, // 10% chance of out of stock
+                'rating' => rand(35, 50) / 10, // 3.5 to 5.0
+                'discount_percent' => rand(0, 3) > 1 ? rand(1, 3) * 10 : 0, // 0, 10, 20, 30% discount
                 'image' => '', // Leave empty as requested
                 'created_at' => now(),
                 'updated_at' => now(),

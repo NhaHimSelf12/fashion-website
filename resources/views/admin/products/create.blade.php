@@ -34,6 +34,21 @@
             </div>
         </div>
 
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <div>
+                <label class="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2">Stock Qty</label>
+                <input type="number" name="stock" value="{{ isset($product) ? $product->stock : old('stock', 0) }}" required min="0" class="w-full px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+            </div>
+            <div>
+                <label class="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2">Rating (0-5)</label>
+                <input type="number" step="0.1" name="rating" value="{{ isset($product) ? $product->rating : old('rating', 5.0) }}" required min="0" max="5" class="w-full px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+            </div>
+            <div>
+                <label class="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2">Discount (%)</label>
+                <input type="number" name="discount_percent" value="{{ isset($product) ? $product->discount_percent : old('discount_percent', 0) }}" required min="0" max="100" class="w-full px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+            </div>
+        </div>
+
         <div class="mb-4">
             <label class="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2">Description</label>
             <textarea name="description" rows="4" class="w-full px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">{{ isset($product) ? $product->description : old('description') }}</textarea>
