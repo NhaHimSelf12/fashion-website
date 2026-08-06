@@ -139,30 +139,89 @@
                 transform: translateY(0);
             }
         }
-        
+
         /* Hero Ken Burns zoom */
-        .hero-bg img { animation: kenburns 18s ease-out infinite alternate; }
-        @keyframes kenburns { from { transform: scale(1); } to { transform: scale(1.12); } }
+        .hero-bg img {
+            animation: kenburns 18s ease-out infinite alternate;
+        }
+
+        @keyframes kenburns {
+            from {
+                transform: scale(1);
+            }
+
+            to {
+                transform: scale(1.12);
+            }
+        }
 
         /* Hero staggered entrance */
-        .hero-item { opacity: 0; transform: translateY(30px); animation: heroFade 1s cubic-bezier(0.25,1,0.5,1) forwards; animation-delay: var(--d, 0s); }
-        @keyframes heroFade { to { opacity: 1; transform: translateY(0); } }
+        .hero-item {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: heroFade 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            animation-delay: var(--d, 0s);
+        }
+
+        @keyframes heroFade {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
         /* Infinite marquee */
-        .marquee-track { animation: marquee 30s linear infinite; }
-        .marquee-track:hover { animation-play-state: paused; }
-        @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+        .marquee-track {
+            animation: marquee 30s linear infinite;
+        }
+
+        .marquee-track:hover {
+            animation-play-state: paused;
+        }
+
+        @keyframes marquee {
+            from {
+                transform: translateX(0);
+            }
+
+            to {
+                transform: translateX(-50%);
+            }
+        }
 
         /* Scroll reveal */
-        .reveal { opacity: 0; transform: translateY(40px); transition: opacity .9s cubic-bezier(0.25,1,0.5,1), transform .9s cubic-bezier(0.25,1,0.5,1); transition-delay: var(--d, 0s); }
-        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity .9s cubic-bezier(0.25, 1, 0.5, 1), transform .9s cubic-bezier(0.25, 1, 0.5, 1);
+            transition-delay: var(--d, 0s);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
         /* Newsletter dot pattern */
-        .newsletter-pattern { background-image: radial-gradient(circle, #ffffff 1px, transparent 1px); background-size: 24px 24px; }
+        .newsletter-pattern {
+            background-image: radial-gradient(circle, #ffffff 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
 
         @media (prefers-reduced-motion: reduce) {
-          .hero-bg img, .marquee-track, .hero-item { animation-duration: 0.01s; animation-iteration-count: 1; }
-          .reveal { transition: none; opacity: 1; transform: none; }
+
+            .hero-bg img,
+            .marquee-track,
+            .hero-item {
+                animation-duration: 0.01s;
+                animation-iteration-count: 1;
+            }
+
+            .reveal {
+                transition: none;
+                opacity: 1;
+                transform: none;
+            }
         }
     </style>
     <!-- Add Playfair Display for elegant headings -->
@@ -179,7 +238,8 @@
             <div class="flex justify-between h-20 items-center">
                 <!-- Logo -->
                 <div class="flex-shrink-0 flex items-center gap-3">
-                    <img src="{{ asset('images/logo.jpg') }}" alt="Logo" class="h-8 w-8 md:h-10 md:w-10 object-contain bg-white rounded-full p-0.5 shadow-sm">
+                    <img src="{{ asset('images/logo.jpg') }}" alt="Logo"
+                        class="h-8 w-8 md:h-10 md:w-10 object-contain bg-white rounded-full p-0.5 shadow-sm">
                     <a href="{{ route('home') }}"
                         class="text-sm sm:text-xl md:text-2xl font-serif font-bold text-gray-900 dark:text-white tracking-wider uppercase truncate max-w-[120px] sm:max-w-none">
                         Fusion T-shirt
@@ -194,23 +254,29 @@
                         <i class="fa-solid fa-sun hidden dark:block text-xl"></i>
                     </button>
                     @auth
-                    <a href="{{ route('profile') }}" class="block">
-                        @if(Auth::user()->avatar)
-                            <img src="{{ str_starts_with(Auth::user()->avatar, 'data:') || str_starts_with(Auth::user()->avatar, 'http') ? Auth::user()->avatar : asset(Auth::user()->avatar) }}"
-                                class="w-8 h-8 rounded-full object-cover border border-gray-200 dark:border-gray-700"
-                                alt="Avatar">
-                        @else
-                            <div class="w-8 h-8 rounded-full bg-gray-900 dark:bg-white flex items-center justify-center text-white dark:text-gray-900 font-bold text-sm">
-                                <i class="fa-solid fa-user"></i>
-                            </div>
-                        @endif
-                    </a>
+                        <a href="{{ route('profile') }}" class="block">
+                            @if(Auth::user()->avatar)
+                                <img src="{{ str_starts_with(Auth::user()->avatar, 'data:') || str_starts_with(Auth::user()->avatar, 'http') ? Auth::user()->avatar : asset(Auth::user()->avatar) }}"
+                                    class="w-8 h-8 rounded-full object-cover border border-gray-200 dark:border-gray-700"
+                                    alt="Avatar">
+                            @else
+                                <div
+                                    class="w-8 h-8 rounded-full bg-gray-900 dark:bg-white flex items-center justify-center text-white dark:text-gray-900 font-bold text-sm">
+                                    <i class="fa-solid fa-user"></i>
+                                </div>
+                            @endif
+                        </a>
                     @endauth
                     @guest
-                    <div class="flex items-center bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-md rounded-full p-1 shadow-inner border border-gray-200/50 dark:border-gray-700/50 relative z-[60]">
-                        <a href="{{ route('login') }}" class="px-2.5 py-1.5 text-[9px] sm:text-[10px] font-bold uppercase tracking-widest rounded-full hover:bg-white dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 transition-all">Log In</a>
-                        <a href="{{ route('register') }}" class="px-2.5 py-1.5 text-[9px] sm:text-[10px] font-bold uppercase tracking-widest rounded-full bg-primary dark:bg-white text-white dark:text-gray-900 shadow-sm transition-all ml-0.5">Sign Up</a>
-                    </div>
+                        <div
+                            class="flex items-center bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-md rounded-full p-1 shadow-inner border border-gray-200/50 dark:border-gray-700/50 relative z-[60]">
+                            <a href="{{ route('login') }}"
+                                class="px-2.5 py-1.5 text-[9px] sm:text-[10px] font-bold uppercase tracking-widest rounded-full hover:bg-white dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 transition-all">Log
+                                In</a>
+                            <a href="{{ route('register') }}"
+                                class="px-2.5 py-1.5 text-[9px] sm:text-[10px] font-bold uppercase tracking-widest rounded-full bg-primary dark:bg-white text-white dark:text-gray-900 shadow-sm transition-all ml-0.5">Sign
+                                Up</a>
+                        </div>
                     @endguest
                 </div>
 
@@ -237,7 +303,8 @@
                             <i class="fa-solid fa-cart-shopping mr-2"></i>
                             <span class="hidden lg:inline uppercase tracking-wide">Cart</span>
                             @php $cartQty = array_sum(array_column(session('cart', []), 'quantity')); @endphp
-                            <span id="cart-counter-badge" class="absolute -top-3 -right-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center transition-transform {{ $cartQty > 0 ? '' : 'hidden' }}">
+                            <span id="cart-counter-badge"
+                                class="absolute -top-3 -right-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center transition-transform {{ $cartQty > 0 ? '' : 'hidden' }}">
                                 {{ $cartQty }}
                             </span>
                         </span>
@@ -360,9 +427,11 @@
                     <h3 class="text-sm font-semibold text-gray-900 dark:text-white tracking-wider uppercase mb-4">
                         Contact</h3>
                     <div class="flex space-x-6">
-                        <a href="#" class="text-gray-400 hover:text-[#0088cc] dark:hover:text-[#0088cc] transition-colors"><i
+                        <a href="https://t.me/Nhaluckyy168"
+                            class="text-gray-400 hover:text-[#0088cc] dark:hover:text-[#0088cc] transition-colors"><i
                                 class="fa-brands fa-telegram text-xl"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-[#1877F2] dark:hover:text-[#1877F2] transition-colors"><i
+                        <a href="https://www.facebook.com/share/191ZmF1ADm/?mibextid=wwXIfr"
+                            class="text-gray-400 hover:text-[#1877F2] dark:hover:text-[#1877F2] transition-colors"><i
                                 class="fa-brands fa-facebook text-xl"></i></a>
                         <a href="#" class="text-gray-400 hover:text-black dark:hover:text-white transition-colors"><i
                                 class="fa-brands fa-tiktok text-xl"></i></a>
@@ -376,36 +445,48 @@
     </footer>
 
     <!-- Mobile Bottom Navigation -->
-    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-[#09090b]/95 backdrop-blur-md border-t border-gray-100 dark:border-gray-800 z-[70] pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.05)] dark:shadow-[0_-4px_20px_rgba(255,255,255,0.02)]">
+    <nav
+        class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-[#09090b]/95 backdrop-blur-md border-t border-gray-100 dark:border-gray-800 z-[70] pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.05)] dark:shadow-[0_-4px_20px_rgba(255,255,255,0.02)]">
         <div class="flex justify-around items-center h-16 px-2">
-            <a href="{{ route('home') }}" class="flex flex-col items-center justify-center w-full h-full text-gray-500 hover:text-primary dark:hover:text-white transition-colors {{ request()->routeIs('home') ? 'text-primary dark:text-white' : '' }}">
-                <i class="fa-solid fa-house text-[22px] mb-1 {{ request()->routeIs('home') ? 'scale-110' : '' }} transition-transform"></i>
+            <a href="{{ route('home') }}"
+                class="flex flex-col items-center justify-center w-full h-full text-gray-500 hover:text-primary dark:hover:text-white transition-colors {{ request()->routeIs('home') ? 'text-primary dark:text-white' : '' }}">
+                <i
+                    class="fa-solid fa-house text-[22px] mb-1 {{ request()->routeIs('home') ? 'scale-110' : '' }} transition-transform"></i>
                 <span class="text-[9px] font-semibold uppercase tracking-widest mt-0.5">Home</span>
             </a>
-            
-            <a href="{{ route('shop') }}" class="flex flex-col items-center justify-center w-full h-full text-gray-500 hover:text-primary dark:hover:text-white transition-colors {{ request()->routeIs('shop') ? 'text-primary dark:text-white' : '' }}">
-                <i class="fa-solid fa-border-all text-[22px] mb-1 {{ request()->routeIs('shop') ? 'scale-110' : '' }} transition-transform"></i>
+
+            <a href="{{ route('shop') }}"
+                class="flex flex-col items-center justify-center w-full h-full text-gray-500 hover:text-primary dark:hover:text-white transition-colors {{ request()->routeIs('shop') ? 'text-primary dark:text-white' : '' }}">
+                <i
+                    class="fa-solid fa-border-all text-[22px] mb-1 {{ request()->routeIs('shop') ? 'scale-110' : '' }} transition-transform"></i>
                 <span class="text-[9px] font-semibold uppercase tracking-widest mt-0.5">Products</span>
             </a>
-            
-            <a href="{{ route('cart') }}" class="relative flex flex-col items-center justify-center w-full h-full text-gray-500 hover:text-primary dark:hover:text-white transition-colors {{ request()->routeIs('cart') ? 'text-primary dark:text-white' : '' }}">
+
+            <a href="{{ route('cart') }}"
+                class="relative flex flex-col items-center justify-center w-full h-full text-gray-500 hover:text-primary dark:hover:text-white transition-colors {{ request()->routeIs('cart') ? 'text-primary dark:text-white' : '' }}">
                 <div class="relative">
-                    <i class="fa-solid fa-cart-shopping text-[22px] mb-1 {{ request()->routeIs('cart') ? 'scale-110' : '' }} transition-transform"></i>
+                    <i
+                        class="fa-solid fa-cart-shopping text-[22px] mb-1 {{ request()->routeIs('cart') ? 'scale-110' : '' }} transition-transform"></i>
                     @php $cartQty = array_sum(array_column(session('cart', []), 'quantity')); @endphp
-                    <span id="mobile-cart-counter-badge" class="absolute -top-1.5 -right-2.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center transition-transform {{ $cartQty > 0 ? '' : 'hidden' }}">
+                    <span id="mobile-cart-counter-badge"
+                        class="absolute -top-1.5 -right-2.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center transition-transform {{ $cartQty > 0 ? '' : 'hidden' }}">
                         {{ $cartQty }}
                     </span>
                 </div>
                 <span class="text-[9px] font-semibold uppercase tracking-widest mt-0.5">Cart</span>
             </a>
-            
-            <a href="{{ route('category') }}" class="flex flex-col items-center justify-center w-full h-full text-gray-500 hover:text-primary dark:hover:text-white transition-colors {{ request()->routeIs('category') ? 'text-primary dark:text-white' : '' }}">
-                <i class="fa-regular fa-heart text-[22px] mb-1 {{ request()->routeIs('category') ? 'scale-110 font-solid text-primary dark:text-white' : '' }} transition-transform"></i>
+
+            <a href="{{ route('category') }}"
+                class="flex flex-col items-center justify-center w-full h-full text-gray-500 hover:text-primary dark:hover:text-white transition-colors {{ request()->routeIs('category') ? 'text-primary dark:text-white' : '' }}">
+                <i
+                    class="fa-regular fa-heart text-[22px] mb-1 {{ request()->routeIs('category') ? 'scale-110 font-solid text-primary dark:text-white' : '' }} transition-transform"></i>
                 <span class="text-[9px] font-semibold uppercase tracking-widest mt-0.5">Wishlist</span>
             </a>
-            
-            <a href="{{ Auth::check() ? route('profile') : route('login') }}" class="flex flex-col items-center justify-center w-full h-full text-gray-500 hover:text-primary dark:hover:text-white transition-colors {{ request()->routeIs('profile') || request()->routeIs('login') ? 'text-primary dark:text-white' : '' }}">
-                <i class="fa-regular fa-user text-[22px] mb-1 {{ request()->routeIs('profile') || request()->routeIs('login') ? 'scale-110 font-solid text-primary dark:text-white' : '' }} transition-transform"></i>
+
+            <a href="{{ Auth::check() ? route('profile') : route('login') }}"
+                class="flex flex-col items-center justify-center w-full h-full text-gray-500 hover:text-primary dark:hover:text-white transition-colors {{ request()->routeIs('profile') || request()->routeIs('login') ? 'text-primary dark:text-white' : '' }}">
+                <i
+                    class="fa-regular fa-user text-[22px] mb-1 {{ request()->routeIs('profile') || request()->routeIs('login') ? 'scale-110 font-solid text-primary dark:text-white' : '' }} transition-transform"></i>
                 <span class="text-[9px] font-semibold uppercase tracking-widest mt-0.5">Profile</span>
             </a>
         </div>
@@ -418,53 +499,53 @@
 
         // Scroll reveal
         const revealObserver = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('visible');
-              revealObserver.unobserve(entry.target);
-            }
-          });
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
         }, { threshold: 0.12 });
         document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
         // Animated counters
         const counterObserver = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            if (!entry.isIntersecting) return;
-            const el = entry.target;
-            const target = +el.dataset.target;
-            const duration = 1600;
-            const startTime = performance.now();
-            function tick(now) {
-              const progress = Math.min((now - startTime) / duration, 1);
-              const eased = 1 - Math.pow(1 - progress, 3);
-              el.textContent = Math.round(target * eased);
-              if (progress < 1) requestAnimationFrame(tick);
-            }
-            requestAnimationFrame(tick);
-            counterObserver.unobserve(el);
-          });
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                const el = entry.target;
+                const target = +el.dataset.target;
+                const duration = 1600;
+                const startTime = performance.now();
+                function tick(now) {
+                    const progress = Math.min((now - startTime) / duration, 1);
+                    const eased = 1 - Math.pow(1 - progress, 3);
+                    el.textContent = Math.round(target * eased);
+                    if (progress < 1) requestAnimationFrame(tick);
+                }
+                requestAnimationFrame(tick);
+                counterObserver.unobserve(el);
+            });
         }, { threshold: 0.5 });
         document.querySelectorAll('.counter').forEach(el => counterObserver.observe(el));
 
         // Global AJAX Add to Cart
         document.querySelectorAll('form[action="{{ route('cart.add') }}"]').forEach(form => {
-            form.addEventListener('submit', function(e) {
+            form.addEventListener('submit', function (e) {
                 e.preventDefault();
-                
+
                 @guest
-                window.location.href = "{{ route('login') }}";
-                return;
+                    window.location.href = "{{ route('login') }}";
+                    return;
                 @endguest
                 
                 const btn = this.querySelector('button[type="submit"]');
                 const originalHtml = btn.innerHTML;
-                
+
                 // Set loading state if the button doesn't have an icon we want to keep
-                if(!originalHtml.includes('fa-cart-shopping')) {
-                     btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+                if (!originalHtml.includes('fa-cart-shopping')) {
+                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
                 } else {
-                     btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
                 }
                 btn.disabled = true;
 
@@ -477,50 +558,50 @@
                         'Accept': 'application/json'
                     }
                 })
-                .then(response => response.json())
-                .then(data => {
-                    btn.innerHTML = originalHtml;
-                    btn.disabled = false;
+                    .then(response => response.json())
+                    .then(data => {
+                        btn.innerHTML = originalHtml;
+                        btn.disabled = false;
 
-                    if(data.success) {
-                        const badge = document.getElementById('cart-counter-badge');
-                        if (badge) {
-                            badge.innerText = data.cart_count;
-                            badge.classList.remove('hidden');
-                            badge.classList.add('scale-125');
-                            setTimeout(() => badge.classList.remove('scale-125'), 200);
+                        if (data.success) {
+                            const badge = document.getElementById('cart-counter-badge');
+                            if (badge) {
+                                badge.innerText = data.cart_count;
+                                badge.classList.remove('hidden');
+                                badge.classList.add('scale-125');
+                                setTimeout(() => badge.classList.remove('scale-125'), 200);
+                            }
+                            const mobileBadge = document.getElementById('mobile-cart-counter-badge');
+                            if (mobileBadge) {
+                                mobileBadge.innerText = data.cart_count;
+                                mobileBadge.classList.remove('hidden');
+                                mobileBadge.classList.add('scale-125');
+                                setTimeout(() => mobileBadge.classList.remove('scale-125'), 200);
+                            }
+                            showToast(data.message, 'success');
                         }
-                        const mobileBadge = document.getElementById('mobile-cart-counter-badge');
-                        if (mobileBadge) {
-                            mobileBadge.innerText = data.cart_count;
-                            mobileBadge.classList.remove('hidden');
-                            mobileBadge.classList.add('scale-125');
-                            setTimeout(() => mobileBadge.classList.remove('scale-125'), 200);
-                        }
-                        showToast(data.message, 'success');
-                    }
-                })
-                .catch(error => {
-                    btn.innerHTML = originalHtml;
-                    btn.disabled = false;
-                    showToast('Error adding to cart', 'error');
-                });
+                    })
+                    .catch(error => {
+                        btn.innerHTML = originalHtml;
+                        btn.disabled = false;
+                        showToast('Error adding to cart', 'error');
+                    });
             });
         });
 
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
-            
+
             const bgColor = type === 'success' ? 'bg-gray-900 dark:bg-white' : 'bg-red-600';
             const textColor = type === 'success' ? 'text-white dark:text-gray-900' : 'text-white';
             const icon = type === 'success' ? 'fa-check-circle' : 'fa-circle-exclamation';
-            
+
             toast.className = `flex items-center gap-3 px-4 py-3 rounded-lg shadow-xl ${bgColor} ${textColor} transform transition-all duration-300 translate-y-10 opacity-0`;
             toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span class="font-medium text-sm">${message}</span>`;
-            
+
             container.appendChild(toast);
-            
+
             setTimeout(() => toast.classList.remove('translate-y-10', 'opacity-0'), 10);
             setTimeout(() => {
                 toast.classList.add('translate-y-10', 'opacity-0');
