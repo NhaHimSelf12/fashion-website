@@ -106,9 +106,7 @@ class ShopController extends Controller
 
         $cart = session()->get('cart', []);
 
-        if (isset($cart[$id])) {
-            $cart[$id]['quantity']++;
-        } else {
+        if (!isset($cart[$id])) {
             $cart[$id] = [
                 'name' => $product->name,
                 'price' => $product->price,
@@ -116,6 +114,7 @@ class ShopController extends Controller
                 'quantity' => 1
             ];
         }
+        // If it is already in the cart, we do nothing and keep quantity as 1.
 
         session()->put('cart', $cart);
 
