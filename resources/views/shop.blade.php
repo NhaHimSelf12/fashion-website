@@ -50,7 +50,7 @@
           </a>
       </div>
   @else
-      <div class="py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-14">
+      <div class="py-16 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-4 sm:gap-x-6 gap-y-10 sm:gap-y-14">
           @foreach($products as $product)
           <div class="group relative reveal" style="--d: {{ ($loop->index % 4) * 0.1 }}s">
             <div class="product-img-wrapper relative aspect-[3/4] mb-5 overflow-hidden">
