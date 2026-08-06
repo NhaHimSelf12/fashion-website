@@ -110,8 +110,8 @@ class ShopController extends Controller
         if (!isset($cart[$id])) {
             $cart[$id] = [
                 'name' => $product->name,
-                'price' => $product->price,
-                'image' => $product->image ?? 'https://via.placeholder.com/150',
+                'price' => $product->discount_percent > 0 ? $product->price - ($product->price * $product->discount_percent / 100) : $product->price,
+                'image' => !empty($product->image) ? (str_starts_with($product->image, 'data:') ? route('image.product', $product->id) : (str_starts_with($product->image, 'http') ? $product->image : asset($product->image))) : asset('images/logo.jpg'),
                 'quantity' => 1
             ];
         }
