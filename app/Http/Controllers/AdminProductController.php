@@ -33,6 +33,8 @@ class AdminProductController extends Controller
             'price' => 'required|numeric',
             'description' => 'nullable|string',
             'image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'stock' => 'nullable|integer|min:0',
+            'discount_percent' => 'nullable|integer|min:0|max:100',
         ]);
 
         $data = $request->except('image_file');
@@ -62,6 +64,8 @@ class AdminProductController extends Controller
             'price' => 'required|numeric',
             'description' => 'nullable|string',
             'image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'stock' => 'nullable|integer|min:0',
+            'discount_percent' => 'nullable|integer|min:0|max:100',
         ]);
 
         $data = $request->except('image_file');

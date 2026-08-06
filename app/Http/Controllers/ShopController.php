@@ -16,7 +16,8 @@ class ShopController extends Controller
 {
     public function index()
     {
-        return view('home');
+        $newArrivals = Product::latest()->take(4)->get();
+        return view('home', compact('newArrivals'));
     }
 
     public function shop(Request $request)

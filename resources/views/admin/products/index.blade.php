@@ -18,6 +18,8 @@
                     <th class="py-3 px-4 font-semibold text-gray-600 dark:text-gray-300">Name</th>
                     <th class="py-3 px-4 font-semibold text-gray-600 dark:text-gray-300">Category</th>
                     <th class="py-3 px-4 font-semibold text-gray-600 dark:text-gray-300">Price</th>
+                    <th class="py-3 px-4 font-semibold text-gray-600 dark:text-gray-300">Stock</th>
+                    <th class="py-3 px-4 font-semibold text-gray-600 dark:text-gray-300">Discount</th>
                     <th class="py-3 px-4 font-semibold text-gray-600 dark:text-gray-300 text-right rounded-tr-lg">Actions</th>
                 </tr>
             </thead>
@@ -30,6 +32,18 @@
                     <td class="py-3 px-4 font-medium">{{ $product->name }}</td>
                     <td class="py-3 px-4">{{ $product->category ? $product->category->name : 'N/A' }}</td>
                     <td class="py-3 px-4 font-bold text-primary">${{ number_format($product->price, 2) }}</td>
+                    <td class="py-3 px-4">
+                        <span class="px-2 py-1 text-xs rounded-full {{ $product->stock > 10 ? 'bg-green-100 text-green-700' : ($product->stock > 0 ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700') }}">
+                            {{ $product->stock }}
+                        </span>
+                    </td>
+                    <td class="py-3 px-4">
+                        @if($product->discount_percent > 0)
+                            <span class="px-2 py-1 text-xs bg-red-100 text-red-700 rounded-full font-bold">-{{ $product->discount_percent }}%</span>
+                        @else
+                            <span class="text-gray-400 text-sm">-</span>
+                        @endif
+                    </td>
                     <td class="py-3 px-4 text-right flex justify-end gap-2 items-center h-full">
                         <a href="{{ route('admin.products.edit', $product->id) }}" class="bg-yellow-100 text-yellow-600 hover:bg-yellow-200 p-2 rounded-lg transition"><i class="fa-solid fa-pen-to-square"></i></a>
                         <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this product?')">
@@ -41,7 +55,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" class="py-8 text-center text-gray-500 dark:text-gray-400">No products found. Add your first piece of clothing!</td>
+                    <td colspan="7" class="py-8 text-center text-gray-500 dark:text-gray-400">No products found. Add your first piece of clothing!</td>
                 </tr>
                 @endforelse
             </tbody>
